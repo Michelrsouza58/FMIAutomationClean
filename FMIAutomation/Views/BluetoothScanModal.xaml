@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.BluetoothScanModal"
+             BackgroundColor="#80000000">
+    <Frame Padding="20" BackgroundColor="#25303B" CornerRadius="20" VerticalOptions="Center" HorizontalOptions="Center" HasShadow="True">
+        <StackLayout Spacing="16" WidthRequest="320">
+            <Label Text="Dispositivos encontrados" TextColor="White" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+            <CollectionView x:Name="ScanResultsCollection" ItemsLayout="VerticalList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal" Spacing="12" Padding="8">
+                            <Frame HeightRequest="40" WidthRequest="40" CornerRadius="20" BackgroundColor="#3B5A7A" HasShadow="False" VerticalOptions="Center">
+                                <Image Source="bluetooth_icon.svg" HeightRequest="24" WidthRequest="24" VerticalOptions="Center" HorizontalOptions="Center" />
+                            </Frame>
+                            <Label Text="{Binding Name}" TextColor="White" FontSize="16" VerticalOptions="Center" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button x:Name="CloseBtn" Text="Fechar" BackgroundColor="#3B5A7A" TextColor="White" CornerRadius="10" HeightRequest="44" />
+        </StackLayout>
+    </Frame>
+</ContentView>

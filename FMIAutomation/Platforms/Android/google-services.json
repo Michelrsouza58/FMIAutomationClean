@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "554885928203",
+    "firebase_url": "https://fmiautomation-60e6e-default-rtdb.firebaseio.com",
+    "project_id": "fmiautomation-60e6e",
+    "storage_bucket": "fmiautomation-60e6e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554885928203:android:26b61a018d982065977e0e",
+        "android_client_info": {
+          "package_name": "com.fmiautomation.fmi.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABxQ7cHCynIzs82cF8oxHe6mMM1Gy3ysE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

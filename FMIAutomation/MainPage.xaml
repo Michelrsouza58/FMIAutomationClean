@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,0" Spacing="20" BackgroundColor="#25303B">
+            <Frame Padding="0" IsClippedToBounds="True" CornerRadius="80" HeightRequest="160" WidthRequest="160" HasShadow="False" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0,40,0,10">
+                <Image Source="logo_fmi.png" HeightRequest="160" WidthRequest="160" Aspect="AspectFill" />
+            </Frame>
+
+            <!-- Toggle Login/Cadastro -->
+            <Grid ColumnDefinitions="*,*" HeightRequest="48" Margin="0,0,0,10">
+                <Button x:Name="LoginTab" Text="LOGIN" BackgroundColor="#3B5A7A" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
+                <Button x:Name="CadastroTab" Text="CADASTRAR" BackgroundColor="White" TextColor="#3B5A7A" FontAttributes="Bold" CornerRadius="10" Grid.Column="1"/>
+            </Grid>
+
+            <!-- Campos de Login -->
+            <Entry x:Name="EmailEntry" Placeholder="E-mail" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="#B0B0B0" Margin="0,0,0,5" HeightRequest="48"/>
+            <Entry x:Name="SenhaEntry" Placeholder="Senha" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="#B0B0B0" HeightRequest="48"/>
+
+            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                <CheckBox x:Name="LembrarCheck" Color="#3B5A7A"/>
+                <Label Text="Lembrar-me a senha?" TextColor="White" FontSize="14" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+
+            <Button x:Name="EntrarBtn" Text="ENTRAR" BackgroundColor="#3B5A7A" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="48" Margin="0,10,0,0"/>
+
+            <!-- Botões Sociais -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,20,0,0">
+                <ImageButton x:Name="FacebookBtn" Source="icon_facebook.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent"/>
+                <ImageButton x:Name="GoogleBtn" Source="icon_google.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent"/>
+                <ImageButton x:Name="AppleBtn" Source="icon_apple.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent"/>
+            </HorizontalStackLayout>
+            <Label Text="OU ENTRAR COM" TextColor="White" FontSize="12" HorizontalOptions="Center" Margin="0,10,0,0"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

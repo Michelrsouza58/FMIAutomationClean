@@ -1,0 +1,20 @@
+# Ignore arquivos e pastas de build, IDE e temporários
+bin/
+obj/
+.vs/
+publish-android/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.apk
+*.idsig
+*.pdb
+*.db
+*.cache
+*.log
+*.vsidx
+*.apk
+*.zip
+*.tmp
+*.lock.json
