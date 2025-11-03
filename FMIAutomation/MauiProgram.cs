@@ -19,9 +19,13 @@ public static class MauiProgram
 	builder.Logging.AddDebug();
 #endif
 
+
 	// Registrar AuthService como singleton
 	string firebaseUrl = "https://fmiautomation-60e6e-default-rtdb.firebaseio.com/";
 	builder.Services.AddSingleton<Services.IAuthService>(sp => new Services.AuthService(firebaseUrl));
+
+	// Registrar MainPage para DI
+	builder.Services.AddTransient<MainPage>();
 
 	return builder.Build();
     }

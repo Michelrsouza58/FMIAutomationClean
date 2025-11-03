@@ -15,17 +15,22 @@ public partial class MainPage : ContentPage
 	private Entry? nomeEntry, confirmarSenhaEntry;
 	private readonly IAuthService _authService;
 
-	public MainPage()
+	public MainPage(IAuthService authService)
 	{
-		_authService = Application.Current?.Handler?.MauiContext?.Services.GetService(typeof(IAuthService)) as IAuthService
-			?? throw new System.Exception("AuthService not found in DI");
+		_authService = authService;
 		InitializeComponent();
 		SetupToggle();
 		EntrarBtn.Clicked += EntrarBtn_Clicked;
 
-		// Adicionar handler para login Google usando WebAuthenticator
-		var googleBtn = this.FindByName<ImageButton>("GoogleBtn");
-		if (googleBtn != null) googleBtn.Clicked += GoogleLogin_Clicked;
+	// Adicionar handler para login Google usando WebAuthenticator
+	var googleBtn = this.FindByName<ImageButton>("GoogleBtn");
+	if (googleBtn != null) googleBtn.Clicked += GoogleLogin_Clicked;
+
+	// Facebook e Apple (supondo que existam botões com esses nomes)
+	var facebookBtn = this.FindByName<ImageButton>("FacebookBtn");
+	if (facebookBtn != null) facebookBtn.Clicked += FacebookLogin_Clicked;
+	var appleBtn = this.FindByName<ImageButton>("AppleBtn");
+	if (appleBtn != null) appleBtn.Clicked += AppleLogin_Clicked;
 	}
 
 	// Handler para login com Google usando WebAuthenticator
@@ -33,7 +38,6 @@ public partial class MainPage : ContentPage
 	{
 		try
 		{
-			// Substitua pelos valores do seu projeto Google Cloud
 			var clientId = "890616607205-515t9s75cbdhja2i98td2q1hm4039um9.apps.googleusercontent.com";
 			var redirectUri = "com.googleusercontent.apps.890616607205-515t9s75cbdhja2i98td2q1hm4039um9:/oauth2redirect";
 			var authUrl = $"https://accounts.google.com/o/oauth2/v2/auth?client_id={clientId}&redirect_uri={HttpUtility.UrlEncode(redirectUri)}&response_type=code&scope=openid%20email%20profile";
@@ -43,8 +47,37 @@ public partial class MainPage : ContentPage
 			if (result != null && result.Properties.ContainsKey("code"))
 			{
 				var code = result.Properties["code"];
-				await DisplayAlert("Login Google", $"Código de autorização: {code}", "OK");
-				// Troque o código por token de acesso em backend seguro
+				using var http = new System.Net.Http.HttpClient();
+				var tokenRequest = new System.Net.Http.FormUrlEncodedContent(new[]
+				{
+					new KeyValuePair<string, string>("code", code),
+					new KeyValuePair<string, string>("client_id", clientId),
+					new KeyValuePair<string, string>("redirect_uri", redirectUri),
+					new KeyValuePair<string, string>("grant_type", "authorization_code"),
+				});
+				var tokenResponse = await http.PostAsync("https://oauth2.googleapis.com/token", tokenRequest);
+				if (!tokenResponse.IsSuccessStatusCode)
+				{
+					await DisplayAlert("Erro", "Falha ao obter token do Google.", "OK");
+					return;
+				}
+				var tokenJson = await tokenResponse.Content.ReadAsStringAsync();
+				var tokenObj = System.Text.Json.JsonDocument.Parse(tokenJson).RootElement;
+				var idToken = tokenObj.GetProperty("id_token").GetString();
+				if (string.IsNullOrEmpty(idToken))
+				{
+					await DisplayAlert("Erro", "Token de ID não retornado pelo Google.", "OK");
+					return;
+				}
+				// Autenticação federada Firebase
+				var firebaseResult = await FirebaseFederatedAuth.AuthenticateWithFirebaseAsync("google", idToken);
+				if (!string.IsNullOrEmpty(firebaseResult.Error))
+				{
+					await DisplayAlert("Erro", firebaseResult.Error, "OK");
+					return;
+				}
+				await Microsoft.Maui.Storage.SecureStorage.SetAsync("login_time", DateTime.UtcNow.Ticks.ToString());
+				await Shell.Current.GoToAsync($"//BluetoothDevicesPage");
 			}
 			else
 			{
@@ -55,6 +88,78 @@ public partial class MainPage : ContentPage
 		{
 			await DisplayAlert("Erro", ex.Message, "OK");
 		}
+	}
+
+	// Facebook Login
+	async void FacebookLogin_Clicked(object? sender, EventArgs e)
+	{
+		try
+		{
+			// Exemplo: use WebAuthenticator para Facebook OAuth
+			var clientId = "SEU_FACEBOOK_APP_ID";
+			var redirectUri = "https://www.facebook.com/connect/login_success.html";
+			var authUrl = $"https://www.facebook.com/v10.0/dialog/oauth?client_id={clientId}&redirect_uri={HttpUtility.UrlEncode(redirectUri)}&response_type=token&scope=email,public_profile";
+			var callbackUrl = redirectUri;
+
+			var result = await WebAuthenticator.Default.AuthenticateAsync(new Uri(authUrl), new Uri(callbackUrl));
+			if (result != null && result.Properties.ContainsKey("access_token"))
+			{
+				var accessToken = result.Properties["access_token"];
+				var firebaseResult = await FirebaseFederatedAuth.AuthenticateWithFirebaseAsync("facebook", accessToken);
+				if (!string.IsNullOrEmpty(firebaseResult.Error))
+				{
+					await DisplayAlert("Erro", firebaseResult.Error, "OK");
+					return;
+				}
+				await Microsoft.Maui.Storage.SecureStorage.SetAsync("login_time", DateTime.UtcNow.Ticks.ToString());
+				await Shell.Current.GoToAsync($"//BluetoothDevicesPage");
+			}
+			else
+			{
+				await DisplayAlert("Erro", "Login Facebook cancelado ou sem token.", "OK");
+			}
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Erro", ex.Message, "OK");
+		}
+	}
+
+	// Apple Login
+	async void AppleLogin_Clicked(object? sender, EventArgs e)
+	{
+		try
+		{
+			// O fluxo de login Apple requer configuração especial e uso de id_token
+			// Aqui é um exemplo genérico, ajuste conforme seu fluxo
+			var clientId = "SEU_APPLE_SERVICE_ID";
+			var redirectUri = "https://SEU_DOMINIO/callback";
+			var authUrl = $"https://appleid.apple.com/auth/authorize?client_id={clientId}&redirect_uri={HttpUtility.UrlEncode(redirectUri)}&response_type=code%20id_token&scope=name%20email&response_mode=form_post";
+			var callbackUrl = redirectUri;
+
+			var result = await WebAuthenticator.Default.AuthenticateAsync(new Uri(authUrl), new Uri(callbackUrl));
+			if (result != null && result.Properties.ContainsKey("id_token"))
+			{
+				var idToken = result.Properties["id_token"];
+				var firebaseResult = await FirebaseFederatedAuth.AuthenticateWithFirebaseAsync("apple", idToken);
+				if (!string.IsNullOrEmpty(firebaseResult.Error))
+				{
+					await DisplayAlert("Erro", firebaseResult.Error, "OK");
+					return;
+				}
+				await Microsoft.Maui.Storage.SecureStorage.SetAsync("login_time", DateTime.UtcNow.Ticks.ToString());
+				await Shell.Current.GoToAsync($"//BluetoothDevicesPage");
+			}
+			else
+			{
+				await DisplayAlert("Erro", "Login Apple cancelado ou sem id_token.", "OK");
+			}
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Erro", ex.Message, "OK");
+		}
+	}
 	}
 	private async void EntrarBtn_Clicked(object? sender, EventArgs e)
 	{
@@ -97,6 +202,16 @@ public partial class MainPage : ContentPage
 				return;
 			}
 
+		if (EmailEntry == null || SenhaEntry == null)
+		{
+			await DisplayAlert("Erro", "Campos de login não encontrados na tela.", "OK");
+			return;
+		}
+		if (_authService == null)
+		{
+			await DisplayAlert("Erro", "Serviço de autenticação não disponível.", "OK");
+			return;
+		}
 		string email = EmailEntry.Text?.Trim() ?? string.Empty;
 		string senha = SenhaEntry.Text ?? string.Empty;
 		System.Diagnostics.Debug.WriteLine($"[LOGIN UI] Valor lido de EmailEntry: '{EmailEntry.Text}'");
@@ -113,7 +228,8 @@ public partial class MainPage : ContentPage
 			bool success = await _authService.LoginAsync(email, senha);
 			if (success)
 			{
-				await Shell.Current.GoToAsync($"//BluetoothDevicesPage");
+				await Microsoft.Maui.Storage.SecureStorage.SetAsync("login_time", DateTime.UtcNow.Ticks.ToString());
+				Application.Current.MainPage = new AppShell();
 			}
 			else
 			{

@@ -7,8 +7,8 @@ namespace FMIAutomation.ViewModels
 {
     public class BluetoothDevicesViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<BluetoothDevice> Devices { get; set; } = new();
-        public event PropertyChangedEventHandler PropertyChanged;
+    public ObservableCollection<BluetoothDevice> Devices { get; set; } = new();
+    public event PropertyChangedEventHandler? PropertyChanged;
 
         public BluetoothDevicesViewModel()
         {

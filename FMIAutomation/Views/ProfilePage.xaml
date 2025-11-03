@@ -3,11 +3,80 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.ProfilePage"
              BackgroundColor="#25303B">
-    <VerticalStackLayout Padding="30,40,30,0" Spacing="20">
-        <Frame Padding="0" IsClippedToBounds="True" CornerRadius="80" HeightRequest="120" WidthRequest="120" HasShadow="False" BackgroundColor="Transparent" HorizontalOptions="Center">
-            <Image Source="icon_apple.png" HeightRequest="120" WidthRequest="120" Aspect="AspectFill" />
-        </Frame>
-        <Label Text="Seu Perfil" TextColor="White" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
-        <Label Text="Aqui você poderá editar seus dados, trocar senha, etc." TextColor="#B0B0B0" FontSize="16" HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="32,48,32,32">
+            <!-- Avatar -->
+            <Frame HeightRequest="120" WidthRequest="120" CornerRadius="60" Padding="0" HorizontalOptions="Center" BackgroundColor="#374151">
+                <Image Source="user_avatar.png" HeightRequest="120" WidthRequest="120" Aspect="AspectFill"/>
+            </Frame>
+            <!-- Nome e email -->
+            <Label x:Name="NameLabel" Text="Nome do Usuário" FontSize="22" TextColor="White" HorizontalOptions="Center"/>
+            <Label x:Name="EmailLabel" Text="email@exemplo.com" FontSize="16" TextColor="#B0B0B0" HorizontalOptions="Center"/>
+            <!-- Opções elegantes com ícones -->
+            <Frame CornerRadius="16" BackgroundColor="#374151" Padding="0">
+                <VerticalStackLayout>
+                    <!-- Editar Dados -->
+                    <Grid x:Name="EditProfileOption" Padding="16,12" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="icon_profile.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
+                        <Label Text="Editar Dados" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
+                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="#2D3748"/>
+                    <!-- Alterar Senha -->
+                    <Grid x:Name="ChangePasswordOption" Padding="16,12" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="icon_settings.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
+                        <Label Text="Alterar Senha" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
+                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="#2D3748"/>
+                    <!-- Preferências -->
+                    <Grid x:Name="PreferencesOption" Padding="16,12" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="icon_settings.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
+                        <Label Text="Preferências" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
+                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="#2D3748"/>
+                    <!-- Sobre o App -->
+                    <Grid x:Name="AboutOption" Padding="16,12" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="icon_home.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
+                        <Label Text="Sobre o App" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
+                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="#2D3748"/>
+                    <!-- Excluir Conta -->
+                    <Grid x:Name="DeleteAccountOption" Padding="16,12" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="icon_logout.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
+                        <Label Text="Excluir Conta" FontSize="18" TextColor="#EF4444" Grid.Column="1" VerticalOptions="Center"/>
+                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            <Button Text="Sair" x:Name="LogoutBtn" BackgroundColor="#EF4444" TextColor="White" CornerRadius="12" HeightRequest="48" FontAttributes="Bold"/>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

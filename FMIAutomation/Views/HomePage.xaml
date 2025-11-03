@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.HomePage"
+             BackgroundColor="#25303B">
+    <ScrollView>
+        <Grid RowSpacing="32" ColumnSpacing="32" Padding="32,48,32,32">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- HOME -->
+            <Frame x:Name="HomeFrame" Grid.Row="0" Grid.Column="0" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Image Source="icon_home.png" HeightRequest="56" WidthRequest="56"/>
+                    <Label Text="Home" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Meus Dispositivos -->
+            <Frame x:Name="DevicesFrame" Grid.Row="0" Grid.Column="1" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Image Source="icon_devices.png" HeightRequest="56" WidthRequest="56"/>
+                    <Label Text="Meus Dispositivos" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Setup -->
+            <Frame x:Name="SetupFrame" Grid.Row="1" Grid.Column="0" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Image Source="icon_settings.png" HeightRequest="56" WidthRequest="56"/>
+                    <Label Text="Setup" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Logout -->
+            <Frame x:Name="LogoutFrame" Grid.Row="1" Grid.Column="1" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Image Source="icon_logout.png" HeightRequest="56" WidthRequest="56"/>
+                    <Label Text="Logout" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
+                </StackLayout>
+            </Frame>
+        </Grid>
+    </ScrollView>
+</ContentPage>

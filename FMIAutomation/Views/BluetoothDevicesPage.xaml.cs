@@ -19,7 +19,6 @@ namespace FMIAutomation.Views
             // Mock: adicionar dispositivos encontrados
             modal.ScanResults.Add(new Models.BluetoothDevice { Name = "Novo Fone", Address = "33:44:55:66:77:88", IsPaired = false });
             modal.ScanResults.Add(new Models.BluetoothDevice { Name = "Caixa Portátil", Address = "44:55:66:77:88:99", IsPaired = false });
-            modal.Closed += (s, e) => this.Content = mainLayout;
 
             // Overlay modal
             if (this.Content is Layout main)
@@ -29,9 +28,14 @@ namespace FMIAutomation.Views
                 overlay.Children.Add(main);
                 overlay.Children.Add(modal);
                 this.Content = overlay;
+
+                modal.Closed += (s, e) =>
+                {
+                    overlay.Children.Remove(modal);
+                };
             }
         }
 
-        private Layout mainLayout;
+    private Layout? mainLayout;
     }
 }

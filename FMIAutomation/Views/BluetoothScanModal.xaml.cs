@@ -7,7 +7,7 @@ namespace FMIAutomation.Views
     public partial class BluetoothScanModal : ContentView
     {
         public ObservableCollection<BluetoothDevice> ScanResults { get; set; } = new();
-        public event EventHandler Closed;
+    public event EventHandler? Closed;
 
         public BluetoothScanModal()
         {
