@@ -37,13 +37,21 @@ namespace FMIAutomation.Views
 
         private async Task NavigateToDeviceControl(string deviceName, bool isOnline)
         {
-            var parameters = new Dictionary<string, object>
+            try
             {
-                { "deviceName", deviceName },
-                { "isOnline", isOnline }
-            };
-            
-            await Shell.Current.GoToAsync("//devicecontrol", parameters);
+                var parameters = new Dictionary<string, object>
+                {
+                    { "deviceName", deviceName },
+                    { "isOnline", isOnline }
+                };
+                
+                // Teste primeiro sem os parâmetros para ver se funciona
+                await Shell.Current.GoToAsync("devicecontrol", parameters);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Não foi possível navegar para o controle do dispositivo: {ex.Message}", "OK");
+            }
         }
 
         private void AddTapGestures()

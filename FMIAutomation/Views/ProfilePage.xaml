@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.ProfilePage"
-             BackgroundColor="White"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"
              Title="Perfil">
     
     <ScrollView>
@@ -14,8 +14,8 @@
                     <!-- Avatar clicável com gradiente -->
                     <Border x:Name="ProfileImageBorder" 
                             HeightRequest="120" WidthRequest="120" 
-                            BackgroundColor="#F5F5F5" 
-                            Stroke="#007ACC"
+                            BackgroundColor="#E2E8F0" 
+                            Stroke="#3B5A7A"
                             StrokeThickness="3"
                             HorizontalOptions="Center">
                         <Border.StrokeShape>
@@ -26,11 +26,11 @@
                         </Border.GestureRecognizers>
                         <Grid>
                             <Image x:Name="ProfileImage" IsVisible="False" Aspect="AspectFill" />
-                            <Label x:Name="DefaultAvatarLabel" Text="👤" FontSize="56" TextColor="#007ACC" 
+                            <Label x:Name="DefaultAvatarLabel" Text="👤" FontSize="56" TextColor="#3B5A7A" 
                                    HorizontalOptions="Center" VerticalOptions="Center" />
                             
                             <!-- Ícone de câmera moderno -->
-                            <Border BackgroundColor="#007ACC" 
+                            <Border BackgroundColor="#3B5A7A" 
                                     HeightRequest="36" WidthRequest="36"
                                     HorizontalOptions="End" VerticalOptions="End" 
                                     Margin="5">
@@ -52,9 +52,9 @@
                                Text="Carregando..." 
                                FontSize="26" 
                                FontAttributes="Bold" 
-                               TextColor="#2C3E50" 
+                               TextColor="#3B5A7A" 
                                HorizontalOptions="Center"/>
-                        <Frame BackgroundColor="#E3F2FD" 
+                        <Frame BackgroundColor="#E2E8F0" 
                                CornerRadius="20" 
                                Padding="15,8" 
                                HorizontalOptions="Center"
@@ -62,7 +62,7 @@
                             <Label x:Name="EmailLabel" 
                                    Text="Carregando..." 
                                    FontSize="16" 
-                                   TextColor="#1565C0" 
+                                   TextColor="#3B5A7A" 
                                    HorizontalOptions="Center"/>
                         </Frame>
                     </VerticalStackLayout>
@@ -70,7 +70,7 @@
             </Frame>
 
             <!-- Seção Configurações da Conta -->
-            <Label Text="Configurações da Conta" FontSize="20" FontAttributes="Bold" TextColor="#007ACC" Margin="0,20,0,10"/>
+            <Label Text="Configurações da Conta" FontSize="20" FontAttributes="Bold" TextColor="#3B5A7A" Margin="0,20,0,10"/>
             
             <!-- Editar Perfil -->
             <Frame x:Name="EditProfileOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
@@ -81,7 +81,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
-                    <Border BackgroundColor="#E3F2FD" HeightRequest="50" WidthRequest="50" 
+                    <Border BackgroundColor="#E2E8F0" HeightRequest="50" WidthRequest="50" 
                             HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
                         <Border.StrokeShape>
                             <Ellipse />
@@ -90,11 +90,11 @@
                     </Border>
                     
                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label Text="Editar Perfil" FontSize="18" FontAttributes="Bold" TextColor="#1565C0"/>
-                        <Label Text="Alterar nome e informações pessoais" FontSize="14" TextColor="#666"/>
+                        <Label Text="Editar Perfil" FontSize="18" FontAttributes="Bold" TextColor="#3B5A7A"/>
+                        <Label Text="Alterar nome e informações pessoais" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"/>
                     </VerticalStackLayout>
                     
-                    <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
+                    <Label Text="›" FontSize="24" TextColor="#3B5A7A" Grid.Column="2" VerticalOptions="Center"/>
                 </Grid>
             </Frame>
             
@@ -107,7 +107,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
-                    <Border BackgroundColor="#FFF3E0" HeightRequest="50" WidthRequest="50" 
+                    <Border BackgroundColor="#E2E8F0" HeightRequest="50" WidthRequest="50" 
                             HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
                         <Border.StrokeShape>
                             <Ellipse />
@@ -116,16 +116,16 @@
                     </Border>
                     
                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label Text="Alterar Senha" FontSize="18" FontAttributes="Bold" TextColor="#FF9800"/>
-                        <Label Text="Atualizar sua senha de acesso" FontSize="14" TextColor="#666"/>
+                        <Label Text="Alterar Senha" FontSize="18" FontAttributes="Bold" TextColor="#3B5A7A"/>
+                        <Label Text="Atualizar sua senha de acesso" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"/>
                     </VerticalStackLayout>
                     
-                    <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
+                    <Label Text="›" FontSize="24" TextColor="#3B5A7A" Grid.Column="2" VerticalOptions="Center"/>
                 </Grid>
             </Frame>
             
             <!-- Seção Configurações Gerais -->
-            <Label Text="Configurações Gerais" FontSize="20" FontAttributes="Bold" TextColor="#007ACC" Margin="0,30,0,10"/>
+            <Label Text="Configurações Gerais" FontSize="20" FontAttributes="Bold" TextColor="#3B5A7A" Margin="0,30,0,10"/>
             
             <!-- Preferências -->
             <Frame x:Name="PreferencesOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
@@ -136,7 +136,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
-                    <Border BackgroundColor="#F3E5F5" HeightRequest="50" WidthRequest="50" 
+                    <Border BackgroundColor="#E2E8F0" HeightRequest="50" WidthRequest="50" 
                             HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
                         <Border.StrokeShape>
                             <Ellipse />
@@ -145,8 +145,8 @@
                     </Border>
                     
                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label Text="Preferências" FontSize="18" FontAttributes="Bold" TextColor="#9C27B0"/>
-                        <Label Text="Tema, idioma e configurações" FontSize="14" TextColor="#666"/>
+                        <Label Text="Preferências" FontSize="18" FontAttributes="Bold" TextColor="#3B5A7A"/>
+                        <Label Text="Tema, idioma e configurações" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"/>
                     </VerticalStackLayout>
                     
                     <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
