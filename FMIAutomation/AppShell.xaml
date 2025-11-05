@@ -9,19 +9,12 @@
 
 
 
-    <TabBar Title="MenuPrincipal" Shell.TabBarBackgroundColor="{DynamicResource CardColor}" Shell.TabBarForegroundColor="{DynamicResource TextColor}" Shell.TabBarTitleColor="{DynamicResource TextColor}" Shell.TabBarUnselectedColor="{DynamicResource SecondaryTextColor}">
-    <Tab Title="Home" Icon="icon_home.svg">
+    <TabBar Title="MenuPrincipal" Shell.TabBarBackgroundColor="White" Shell.TabBarForegroundColor="#3B5A7A" Shell.TabBarTitleColor="#3B5A7A" Shell.TabBarUnselectedColor="#718096">
+        <Tab Title="Home" Icon="icon_home.svg">
             <ShellContent
                 Title="Home"
                 ContentTemplate="{DataTemplate views:HomePage}"
                 Route="HomePage" 
-                Shell.NavBarIsVisible="False" />
-        </Tab>
-    <Tab Title="Meus Dispositivos" Icon="icon_devices.svg">
-            <ShellContent
-                Title="Bluetooth"
-                ContentTemplate="{DataTemplate views:BluetoothDevicesPage}"
-                Route="BluetoothDevicesPage" 
                 Shell.NavBarIsVisible="False" />
         </Tab>
         <Tab Title="Perfil" Icon="icon_profile.svg">
@@ -29,6 +22,13 @@
                 Title="Perfil"
                 ContentTemplate="{DataTemplate views:ProfilePage}"
                 Route="ProfilePage" 
+                Shell.NavBarIsVisible="False" />
+        </Tab>
+        <Tab Title="Logout" Icon="icon_logout.png">
+            <ShellContent x:Name="LogoutTab"
+                Title="Logout"
+                ContentTemplate="{DataTemplate views:HomePage}"
+                Route="LogoutPage" 
                 Shell.NavBarIsVisible="False" />
         </Tab>
     </TabBar>

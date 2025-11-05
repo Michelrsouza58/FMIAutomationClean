@@ -17,6 +17,9 @@ namespace FMIAutomation.Views
             Device2Tap.Tapped += async (s, e) => await NavigateToDeviceControl("ESP32 Aves", false);
             Device3Tap.Tapped += async (s, e) => await NavigateToDeviceControl("Controle Geral", true);
             Device4Tap.Tapped += async (s, e) => await NavigateToDeviceControl("Monitoramento", true);
+            
+            // Configurar botão flutuante para adicionar dispositivo
+            AddDeviceFloatingButton.Clicked += async (s, e) => await NavigateToBluetoothScan();
         }
 
         private void OnThemeChanged(object? sender, ThemeService.AppTheme newTheme)
@@ -51,6 +54,18 @@ namespace FMIAutomation.Views
             catch (Exception ex)
             {
                 await DisplayAlert("Erro", $"Não foi possível navegar para o controle do dispositivo: {ex.Message}", "OK");
+            }
+        }
+        
+        private async Task NavigateToBluetoothScan()
+        {
+            try
+            {
+                await Shell.Current.GoToAsync("bluetoothscan");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao abrir scanner Bluetooth: {ex.Message}", "OK");
             }
         }
 

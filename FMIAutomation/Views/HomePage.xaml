@@ -4,7 +4,9 @@
              x:Class="FMIAutomation.Views.HomePage"
              BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
     
-    <ScrollView>
+    <Grid>
+        <!-- Conteúdo principal -->
+        <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="20">
             
             <!-- Header -->
@@ -202,5 +204,24 @@
             </Frame>
             
         </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+        
+        <!-- Botão Flutuante para Adicionar Dispositivo -->
+        <Button x:Name="AddDeviceFloatingButton"
+                Text="+"
+                FontSize="28"
+                FontAttributes="Bold"
+                BackgroundColor="#3B5A7A"
+                TextColor="White"
+                CornerRadius="30"
+                WidthRequest="60"
+                HeightRequest="60"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,100">
+            <Button.Shadow>
+                <Shadow Brush="Black" Offset="3,3" Radius="10" Opacity="0.3"/>
+            </Button.Shadow>
+        </Button>
+    </Grid>
 </ContentPage>
