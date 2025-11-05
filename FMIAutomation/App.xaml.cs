@@ -5,6 +5,13 @@ public partial class App : Application
 	public App()
 	{
 		InitializeComponent();
+		
+		// Aplicar tema salvo na inicialização
+		_ = Task.Run(async () =>
+		{
+			await Services.ThemeService.InitializeAsync();
+		});
+		
 		MainPage = CreateStartupPage();
 	}
 

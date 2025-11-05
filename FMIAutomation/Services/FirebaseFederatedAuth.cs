@@ -8,12 +8,12 @@ namespace FMIAutomation.Services
 {
     public static class FirebaseFederatedAuth
     {
-        // Substitua pela sua API KEY do Firebase
-        private const string FirebaseApiKey = "SUA_API_KEY_AQUI";
+    // API KEY do Firebase fornecida pelo usuário
+    private const string FirebaseApiKey = "AIzaSyABxQ7cHCynIzs82cF8oxHe6mMM1Gy3ysE";
 
         public static async Task<(string? FirebaseIdToken, string? Email, string? Name, string? Error)> AuthenticateWithFirebaseAsync(string provider, string idTokenOrAccessToken)
         {
-            string providerId = provider.ToLower() switch
+            string? providerId = provider.ToLower() switch
             {
                 "google" => "google.com",
                 "facebook" => "facebook.com",

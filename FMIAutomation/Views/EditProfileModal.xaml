@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.EditProfileModal"
+             Title="Editar Perfil"
+             BackgroundColor="{DynamicResource BackgroundColor}">
+
+
+
+    <Grid>
+        <!-- Background overlay -->
+        <BoxView BackgroundColor="Black" Opacity="0.5" />
+        
+        <!-- Modal content -->
+        <Frame x:Name="MainContent" 
+               BackgroundColor="{DynamicResource CardColor}"
+               CornerRadius="20"
+               Margin="10,50,10,0"
+               VerticalOptions="FillAndExpand"
+               HasShadow="True">
+            
+            <ScrollView>
+                <StackLayout Spacing="25" Padding="20">
+                    
+                    <!-- Header -->
+                    <Grid>
+                        <Label Text="✏️ Editar Perfil" 
+                               FontSize="28" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{DynamicResource TextColor}" />
+                        
+                        <Button Text="✕" 
+                                x:Name="CloseButton"
+                                FontSize="20"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource SecondaryTextColor}"
+                                HorizontalOptions="End"
+                                VerticalOptions="Start"
+                                WidthRequest="40"
+                                HeightRequest="40" />
+                    </Grid>
+
+                    <!-- Foto do perfil -->
+                    <StackLayout>
+                        <Label Text="📸 Foto do Perfil" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource TextColor}"
+                               Margin="0,0,0,10" />
+                        
+                        <Frame BackgroundColor="{DynamicResource BorderColor}" 
+                               CornerRadius="75" 
+                               WidthRequest="150" 
+                               HeightRequest="150"
+                               HorizontalOptions="Center"
+                               Padding="5">
+                            
+                            <Grid>
+                                <Image x:Name="ProfileImage" 
+                                       Source="user_placeholder.png"
+                                       Aspect="AspectFill"
+                                       WidthRequest="140"
+                                       HeightRequest="140"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                                
+                                <!-- Overlay para upload -->
+                                <Button Text="📷" 
+                                        x:Name="UploadPhotoButton"
+                                        FontSize="24"
+                                        BackgroundColor="Black"
+                                        TextColor="White"
+                                        Opacity="0.8"
+                                        CornerRadius="20"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="End"
+                                        Margin="0,0,5,5" />
+                            </Grid>
+                        </Frame>
+                    </StackLayout>
+
+                    <!-- Campos de informação -->
+                    <StackLayout Spacing="20">
+                        
+                        <!-- Nome -->
+                        <Frame BackgroundColor="{DynamicResource CardColor}" 
+                               CornerRadius="12" 
+                               Padding="15"
+                               HasShadow="False"
+                               BorderColor="{DynamicResource BorderColor}">
+                            <StackLayout Spacing="8">
+                                <Label Text="👤 Nome Completo" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource TextColor}" />
+                                <Entry x:Name="NameEntry" 
+                                       FontSize="16"
+                                       TextColor="{DynamicResource TextColor}"
+                                       PlaceholderColor="{DynamicResource SecondaryTextColor}"
+                                       Placeholder="Digite seu nome completo"
+                                       BackgroundColor="Transparent" />
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Email -->
+                        <Frame BackgroundColor="{DynamicResource CardColor}" 
+                               CornerRadius="12" 
+                               Padding="15"
+                               HasShadow="False"
+                               BorderColor="{DynamicResource BorderColor}">
+                            <StackLayout Spacing="8">
+                                <Label Text="📧 E-mail" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource TextColor}" />
+                                <Entry x:Name="EmailEntry" 
+                                       FontSize="16"
+                                       Keyboard="Email"
+                                       TextColor="{DynamicResource TextColor}"
+                                       PlaceholderColor="{DynamicResource SecondaryTextColor}"
+                                       Placeholder="Digite seu e-mail"
+                                       BackgroundColor="Transparent" />
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Telefone -->
+                        <Frame BackgroundColor="{DynamicResource CardColor}" 
+                               CornerRadius="12" 
+                               Padding="15"
+                               HasShadow="False"
+                               BorderColor="{DynamicResource BorderColor}">
+                            <StackLayout Spacing="8">
+                                <Label Text="📱 Telefone" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource TextColor}" />
+                                <Entry x:Name="PhoneEntry" 
+                                       FontSize="16"
+                                       Keyboard="Telephone"
+                                       TextColor="{DynamicResource TextColor}"
+                                       PlaceholderColor="{DynamicResource SecondaryTextColor}"
+                                       Placeholder="(00) 00000-0000"
+                                       BackgroundColor="Transparent" />
+                            </StackLayout>
+                        </Frame>
+
+                    </StackLayout>
+
+                    <!-- Botões de ação -->
+                    <StackLayout Spacing="15" Margin="0,20,0,30">
+                        
+                        <Button x:Name="SaveButton"
+                                Text="💾 Salvar Alterações" 
+                                FontSize="16" 
+                                FontAttributes="Bold"
+                                BackgroundColor="{DynamicResource AccentColor}"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="50" />
+                        
+                        <Button x:Name="CancelButton"
+                                Text="❌ Cancelar" 
+                                FontSize="16"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource SecondaryTextColor}"
+                                BorderColor="{DynamicResource SecondaryTextColor}"
+                                BorderWidth="1"
+                                CornerRadius="12"
+                                HeightRequest="50" />
+                        
+                    </StackLayout>
+                    
+                </StackLayout>
+            </ScrollView>
+            
+        </Frame>
+    </Grid>
+
+</ContentPage>

@@ -1,4 +1,5 @@
 using Microsoft.Maui.Controls;
+using FMIAutomation.Services;
 
 namespace FMIAutomation.Views
 {
@@ -7,30 +8,47 @@ namespace FMIAutomation.Views
         public HomePage()
         {
             InitializeComponent();
-            AddTapGestures();
+            
+            // Inscrever-se para mudanças de tema
+            ThemeService.ThemeChanged += OnThemeChanged;
+            
+            // Configurar eventos de toque nos dispositivos
+            Device1Tap.Tapped += async (s, e) => await NavigateToDeviceControl("ESP32 Suínos", true);
+            Device2Tap.Tapped += async (s, e) => await NavigateToDeviceControl("ESP32 Aves", false);
+            Device3Tap.Tapped += async (s, e) => await NavigateToDeviceControl("Controle Geral", true);
+            Device4Tap.Tapped += async (s, e) => await NavigateToDeviceControl("Monitoramento", true);
+        }
+
+        private void OnThemeChanged(object? sender, ThemeService.AppTheme newTheme)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // Força a atualização das cores
+                this.BackgroundColor = (Color)Application.Current!.Resources["BackgroundColor"];
+            });
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Desinscrever-se do evento para evitar vazamentos de memória
+            ThemeService.ThemeChanged -= OnThemeChanged;
+        }
+
+        private async Task NavigateToDeviceControl(string deviceName, bool isOnline)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "deviceName", deviceName },
+                { "isOnline", isOnline }
+            };
+            
+            await Shell.Current.GoToAsync("//devicecontrol", parameters);
         }
 
         private void AddTapGestures()
         {
-            // Home (não faz nada, já está na Home)
-            var homeFrame = this.FindByName<Frame>("HomeFrame");
-            if (homeFrame != null)
-                homeFrame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(() => { /* já está na Home */ }) });
-
-            // Meus Dispositivos
-            var devicesFrame = this.FindByName<Frame>("DevicesFrame");
-            if (devicesFrame != null)
-                devicesFrame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(async () => await Shell.Current.GoToAsync("//BluetoothDevicesPage")) });
-
-            // Setup
-            var setupFrame = this.FindByName<Frame>("SetupFrame");
-            if (setupFrame != null)
-                setupFrame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(async () => await Shell.Current.GoToAsync("//ProfilePage")) });
-
-            // Logout
-            var logoutFrame = this.FindByName<Frame>("LogoutFrame");
-            if (logoutFrame != null)
-                logoutFrame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(async () => await LogoutAsync()) });
+            // Gestos já configurados no constructor
         }
 
         private async Task LogoutAsync()
@@ -39,7 +57,11 @@ namespace FMIAutomation.Views
             try { Microsoft.Maui.Storage.SecureStorage.Remove("login_time"); } catch {}
             // Reiniciar o app para remover o Shell e exibir só a tela de login
             var mainPage = (FMIAutomation.MainPage?)Application.Current?.Handler?.MauiContext?.Services.GetService(typeof(FMIAutomation.MainPage));
-            Application.Current.MainPage = mainPage ?? new FMIAutomation.MainPage(new FMIAutomation.Services.AuthService("https://fmiautomation-60e6e-default-rtdb.firebaseio.com/"));
+            if (Application.Current != null)
+            {
+                Application.Current.MainPage = mainPage ?? new FMIAutomation.MainPage(new FMIAutomation.Services.AuthService("https://fmiautomation-60e6e-default-rtdb.firebaseio.com/"));
+            }
+            await Task.CompletedTask; // Para resolver o warning CS1998
         }
     }
 }

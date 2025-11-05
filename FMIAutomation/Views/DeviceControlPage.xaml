@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.DeviceControlPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"
+             Title="Controle do Dispositivo">
+    
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="20">
+            
+            <!-- Header do Dispositivo -->
+            <Frame BackgroundColor="#3B5A7A" 
+                   CornerRadius="20" 
+                   Padding="20" 
+                   HasShadow="True"
+                   Margin="0,10,0,0">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Nome e Status -->
+                    <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                        <Image Source="icon_generic.png" 
+                               HeightRequest="60" 
+                               WidthRequest="60"/>
+                        <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                            <Label x:Name="DeviceNameLabel" 
+                                   Text="ESP32 Dispositivo" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White"/>
+                            <HorizontalStackLayout Spacing="8">
+                                <Ellipse x:Name="StatusDot" 
+                                         Fill="#4CAF50" 
+                                         WidthRequest="10" 
+                                         HeightRequest="10" 
+                                         VerticalOptions="Center"/>
+                                <Label x:Name="StatusLabel" 
+                                       Text="Online" 
+                                       FontSize="14" 
+                                       TextColor="#E0E0E0"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                    
+                    <!-- Botões de Conexão -->
+                    <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                        <Button x:Name="ConnectButton" 
+                                Text="Conectar" 
+                                BackgroundColor="#4CAF50" 
+                                TextColor="White" 
+                                CornerRadius="25" 
+                                WidthRequest="120" 
+                                HeightRequest="50"
+                                FontSize="14"
+                                ImageSource="icon_power.png"/>
+                        <Button x:Name="DisconnectButton" 
+                                Text="Desconectar" 
+                                BackgroundColor="#F44336" 
+                                TextColor="White" 
+                                CornerRadius="25" 
+                                WidthRequest="120" 
+                                HeightRequest="50"
+                                FontSize="14"
+                                ImageSource="icon_power.png"/>
+                    </HorizontalStackLayout>
+                    
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Seção de Controles -->
+            <Label Text="🎛️ Controles da Granja" 
+                   FontSize="20" 
+                   FontAttributes="Bold" 
+                   TextColor="#3B5A7A" 
+                   HorizontalOptions="Start"/>
+            
+            <!-- Card de Controle de Umidade -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="💧" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Umidade" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               VerticalOptions="Center"/>
+                        <Label x:Name="HumidityValueLabel" 
+                               Text="65%" 
+                               FontSize="16" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="EndAndExpand" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <Slider x:Name="HumiditySlider" 
+                            Minimum="0" 
+                            Maximum="100" 
+                            Value="65" 
+                            ThumbColor="#3B5A7A" 
+                            MinimumTrackColor="#3B5A7A" 
+                            MaximumTrackColor="#E0E0E0"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="0%" FontSize="12" TextColor="#757575" Grid.Column="0"/>
+                        <Label Text="100%" FontSize="12" TextColor="#757575" Grid.Column="1" HorizontalOptions="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Card de Controle de Ventilador -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="🌪️" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Velocidade do Ventilador" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               VerticalOptions="Center"/>
+                        <Label x:Name="FanSpeedValueLabel" 
+                               Text="3" 
+                               FontSize="16" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="EndAndExpand" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <Slider x:Name="FanSpeedSlider" 
+                            Minimum="0" 
+                            Maximum="5" 
+                            Value="3" 
+                            ThumbColor="#3B5A7A" 
+                            MinimumTrackColor="#3B5A7A" 
+                            MaximumTrackColor="#E0E0E0"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="Desligado" FontSize="12" TextColor="#757575" Grid.Column="0"/>
+                        <Label Text="Máximo" FontSize="12" TextColor="#757575" Grid.Column="1" HorizontalOptions="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Card de Controle de Temperatura -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="🌡️" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Temperatura" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               VerticalOptions="Center"/>
+                        <Label x:Name="TemperatureValueLabel" 
+                               Text="24°C" 
+                               FontSize="16" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="EndAndExpand" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <Slider x:Name="TemperatureSlider" 
+                            Minimum="15" 
+                            Maximum="35" 
+                            Value="24" 
+                            ThumbColor="#3B5A7A" 
+                            MinimumTrackColor="#3B5A7A" 
+                            MaximumTrackColor="#E0E0E0"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="15°C" FontSize="12" TextColor="#757575" Grid.Column="0"/>
+                        <Label Text="35°C" FontSize="12" TextColor="#757575" Grid.Column="1" HorizontalOptions="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Card de Controle de Iluminação -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="💡" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Iluminação" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               VerticalOptions="Center"/>
+                        <Label x:Name="LightIntensityValueLabel" 
+                               Text="80%" 
+                               FontSize="16" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="EndAndExpand" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <Slider x:Name="LightIntensitySlider" 
+                            Minimum="0" 
+                            Maximum="100" 
+                            Value="80" 
+                            ThumbColor="#3B5A7A" 
+                            MinimumTrackColor="#3B5A7A" 
+                            MaximumTrackColor="#E0E0E0"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="0%" FontSize="12" TextColor="#757575" Grid.Column="0"/>
+                        <Label Text="100%" FontSize="12" TextColor="#757575" Grid.Column="1" HorizontalOptions="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Card de Alimentação Automática -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="🍽️" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Alimentação Automática" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               VerticalOptions="Center"/>
+                        <Label x:Name="FeedingValueLabel" 
+                               Text="4x/dia" 
+                               FontSize="16" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="EndAndExpand" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <Slider x:Name="FeedingSlider" 
+                            Minimum="1" 
+                            Maximum="8" 
+                            Value="4" 
+                            ThumbColor="#3B5A7A" 
+                            MinimumTrackColor="#3B5A7A" 
+                            MaximumTrackColor="#E0E0E0"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="1x/dia" FontSize="12" TextColor="#757575" Grid.Column="0"/>
+                        <Label Text="8x/dia" FontSize="12" TextColor="#757575" Grid.Column="1" HorizontalOptions="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Botão de Aplicar Configurações -->
+            <Button Text="💾 Aplicar Configurações" 
+                    BackgroundColor="#3B5A7A" 
+                    TextColor="White" 
+                    CornerRadius="25" 
+                    HeightRequest="55" 
+                    FontSize="16" 
+                    FontAttributes="Bold" 
+                    Margin="0,20,0,30"
+                    x:Name="ApplyConfigButton"/>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.ProfilePage"
+             BackgroundColor="White"
+             Title="Perfil">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            
+            <!-- Header com Avatar e Info -->
+            <Frame BackgroundColor="LightBlue" CornerRadius="20" Padding="20" HasShadow="True">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Avatar clicável -->
+                    <Border x:Name="ProfileImageBorder" 
+                            HeightRequest="100" WidthRequest="100" 
+                            BackgroundColor="LightGray" 
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="ProfileImageTap" />
+                        </Border.GestureRecognizers>
+                        <Grid>
+                            <Image x:Name="ProfileImage" IsVisible="False" Aspect="AspectFill" />
+                            <Label x:Name="DefaultAvatarLabel" Text="👤" FontSize="48" TextColor="Black" 
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            <!-- Ícone de câmera -->
+                            <Border BackgroundColor="Black" 
+                                    HeightRequest="30" WidthRequest="30"
+                                    HorizontalOptions="End" VerticalOptions="End" 
+                                    Margin="5">
+                                <Border.StrokeShape>
+                                    <Ellipse />
+                                </Border.StrokeShape>
+                                <Label Text="📷" FontSize="16" TextColor="White" 
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Nome e email -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label x:Name="NameLabel" Text="Carregando..." FontSize="22" FontAttributes="Bold" 
+                               TextColor="Black" HorizontalOptions="Center"/>
+                        <Label x:Name="EmailLabel" Text="Carregando..." FontSize="16" 
+                               TextColor="Gray" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Opções do Perfil -->
+            <Frame BackgroundColor="{DynamicResource CardColor}" CornerRadius="20" HasShadow="True" Margin="0,8" Padding="0">
+                <VerticalStackLayout>
+                    <!-- Editar Perfil -->
+                    <Grid x:Name="EditProfileOption" Padding="20,16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="✏️" Style="{DynamicResource OptionIconStyle}" Grid.Column="0"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Editar Perfil" FontSize="18" TextColor="{DynamicResource TextColor}" VerticalOptions="Center"/>
+                            <Label Text="Alterar nome e email" FontSize="13" TextColor="{DynamicResource SecondaryTextColor}" VerticalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Label Text="›" FontSize="18" TextColor="{DynamicResource SecondaryTextColor}" Grid.Column="2" VerticalOptions="Center"/>
+                    </Grid>
+                    
+                    <BoxView HeightRequest="1" Color="{DynamicResource BorderColor}" Margin="20,0"/>
+                    
+                    <!-- Alterar Senha -->
+                    <Grid x:Name="ChangePasswordOption" Padding="20,16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="🔒" Style="{DynamicResource OptionIconStyle}" Grid.Column="0"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Alterar Senha" FontSize="18" TextColor="{DynamicResource TextColor}" VerticalOptions="Center"/>
+                            <Label Text="Atualizar sua senha de acesso" FontSize="13" TextColor="{DynamicResource SecondaryTextColor}" VerticalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Label Text="›" FontSize="18" TextColor="{DynamicResource SecondaryTextColor}" Grid.Column="2" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Configurações -->
+            <Frame BackgroundColor="{DynamicResource CardColor}" CornerRadius="20" HasShadow="True" Margin="0,8" Padding="0">
+                <VerticalStackLayout>
+                    <!-- Preferências -->
+                    <Grid x:Name="PreferencesOption" Padding="20,16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="⚙️" Style="{DynamicResource OptionIconStyle}" Grid.Column="0"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Preferências" FontSize="18" TextColor="{DynamicResource TextColor}" VerticalOptions="Center"/>
+                            <Label Text="Tema, idioma e configurações" FontSize="13" TextColor="{DynamicResource SecondaryTextColor}" VerticalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Label Text="›" FontSize="18" TextColor="{DynamicResource SecondaryTextColor}" Grid.Column="2" VerticalOptions="Center"/>
+                    </Grid>
+                    
+                    <BoxView HeightRequest="1" Color="{DynamicResource BorderColor}" Margin="20,0"/>
+                    
+                    <!-- Sobre o App -->
+                    <Grid x:Name="AboutOption" Padding="20,16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="ℹ️" Style="{DynamicResource OptionIconStyle}" Grid.Column="0"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Sobre o App" FontSize="18" TextColor="{DynamicResource TextColor}" VerticalOptions="Center"/>
+                            <Label Text="Versão e informações" FontSize="13" TextColor="{DynamicResource SecondaryTextColor}" VerticalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Label Text="›" FontSize="18" TextColor="{DynamicResource SecondaryTextColor}" Grid.Column="2" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Ações Perigosas -->
+            <Frame BackgroundColor="{DynamicResource CardColor}" CornerRadius="20" HasShadow="True" Margin="0,8" Padding="0">
+                <VerticalStackLayout>
+                    <!-- Excluir Conta -->
+                    <Grid x:Name="DeleteAccountOption" Padding="20,16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="🗑️" Style="{DynamicResource OptionIconStyle}" Grid.Column="0"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Excluir Conta" FontSize="18" FontAttributes="None" 
+                                   TextColor="{DynamicResource DangerColor}" VerticalOptions="Center"/>
+                            <Label Text="Remover permanentemente sua conta" FontSize="13" TextColor="{DynamicResource SecondaryTextColor}" VerticalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Label Text="›" FontSize="18" TextColor="{DynamicResource SecondaryTextColor}" Grid.Column="2" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Botão de Logout -->
+            <Border BackgroundColor="{DynamicResource DangerColor}" HeightRequest="56" Margin="0,16,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="LogoutTap" />
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Label Text="🚪 Sair da Conta" FontSize="18" FontAttributes="Bold" 
+                           TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+    
+    <!-- Modal de Opções de Imagem -->
+    <Grid x:Name="ImageOptionsModal" IsVisible="False" BackgroundColor="#80000000">
+        <Frame BackgroundColor="{DynamicResource CardColor}" 
+               CornerRadius="20" 
+               Margin="40" 
+               VerticalOptions="Center" 
+               HorizontalOptions="Fill" 
+               Padding="0"
+               HasShadow="True">
+            
+            <VerticalStackLayout Spacing="0">
+                <!-- Header do Modal -->
+                <Grid BackgroundColor="{DynamicResource AccentColor}" Padding="20" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Text="Foto do Perfil" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="White" 
+                           VerticalOptions="Center"
+                           Grid.Column="0" />
+                    
+                    <Button x:Name="CloseModalButton" 
+                            Text="✕" 
+                            BackgroundColor="Transparent" 
+                            TextColor="White" 
+                            FontSize="18" 
+                            HeightRequest="40" 
+                            WidthRequest="40"
+                            CornerRadius="20"
+                            Grid.Column="1" />
+                </Grid>
+                
+                <!-- Opções -->
+                <VerticalStackLayout Padding="20" Spacing="16">
+                    
+                    <!-- Visualizar Imagem -->
+                    <Grid x:Name="ViewImageOption" Padding="16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="👁️" FontSize="24" TextColor="{DynamicResource AccentColor}" 
+                               VerticalOptions="Center" HorizontalOptions="Center" Grid.Column="0"/>
+                        <Label Text="Visualizar Imagem" FontSize="18" 
+                               TextColor="{DynamicResource TextColor}" VerticalOptions="Center" Grid.Column="1"/>
+                    </Grid>
+                    
+                    <BoxView HeightRequest="1" Color="{DynamicResource BorderColor}" />
+                    
+                    <!-- Mudar Imagem -->
+                    <Grid x:Name="ChangeImageOption" Padding="16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="📷" FontSize="24" TextColor="{DynamicResource AccentColor}" 
+                               VerticalOptions="Center" HorizontalOptions="Center" Grid.Column="0"/>
+                        <Label Text="Mudar Imagem" FontSize="18" 
+                               TextColor="{DynamicResource TextColor}" VerticalOptions="Center" Grid.Column="1"/>
+                    </Grid>
+                    
+                    <BoxView HeightRequest="1" Color="{DynamicResource BorderColor}" />
+                    
+                    <!-- Remover Imagem -->
+                    <Grid x:Name="RemoveImageOption" Padding="16" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="🗑️" FontSize="24" TextColor="{DynamicResource DangerColor}" 
+                               VerticalOptions="Center" HorizontalOptions="Center" Grid.Column="0"/>
+                        <Label Text="Remover Imagem" FontSize="18" 
+                               TextColor="{DynamicResource DangerColor}" VerticalOptions="Center" Grid.Column="1"/>
+                    </Grid>
+                    
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+    </Grid>
+    
+    <!-- Modal de Visualização de Imagem -->
+    <Grid x:Name="ImageViewModal" IsVisible="False" BackgroundColor="Black">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer x:Name="CloseImageViewTap" />
+        </Grid.GestureRecognizers>
+        
+        <VerticalStackLayout>
+            <!-- Header -->
+            <Grid BackgroundColor="Black" Padding="20,40,20,20" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Label Text="Foto do Perfil" 
+                       FontSize="18" 
+                       FontAttributes="Bold" 
+                       TextColor="White" 
+                       VerticalOptions="Center"
+                       Grid.Column="0" />
+                
+                <Button x:Name="CloseImageViewButton" 
+                        Text="✕" 
+                        BackgroundColor="Transparent" 
+                        TextColor="White" 
+                        FontSize="18" 
+                        HeightRequest="40" 
+                        WidthRequest="40"
+                        CornerRadius="20"
+                        Grid.Column="1" />
+            </Grid>
+            
+            <!-- Imagem -->
+            <Image x:Name="FullSizeProfileImage" 
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand"
+                   Aspect="AspectFit" 
+                   Margin="20" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -2,49 +2,205 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.HomePage"
-             BackgroundColor="#25303B">
+             BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
+    
     <ScrollView>
-        <Grid RowSpacing="32" ColumnSpacing="32" Padding="32,48,32,32">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- HOME -->
-            <Frame x:Name="HomeFrame" Grid.Row="0" Grid.Column="0" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
-                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                    <Image Source="icon_home.png" HeightRequest="56" WidthRequest="56"/>
-                    <Label Text="Home" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
-                </StackLayout>
+        <VerticalStackLayout Spacing="25" Padding="20">
+            
+            <!-- Header -->
+            <VerticalStackLayout Spacing="10" Margin="0,20,0,30">
+                <Label Text="🏠 FMI Automation" 
+                       FontSize="28" 
+                       FontAttributes="Bold" 
+                       TextColor="#3B5A7A" 
+                       HorizontalOptions="Center" />
+                
+                <Label Text="Dispositivos Conectados" 
+                       FontSize="18" 
+                       TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+            
+            <!-- Grid de Dispositivos -->
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="20" ColumnSpacing="15">
+                
+                <!-- Dispositivo 1 - ESP32 Granja Suínos -->
+                <Frame x:Name="Device1Frame" 
+                       BackgroundColor="White" 
+                       CornerRadius="25" 
+                       Padding="20" 
+                       HasShadow="True"
+                       HeightRequest="160"
+                       Grid.Row="0" Grid.Column="0">
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Status e Ícone -->
+                        <Grid>
+                            <Image Source="icon_generic.png" 
+                                   HeightRequest="50" 
+                                   WidthRequest="50" 
+                                   HorizontalOptions="Center"/>
+                            <!-- Bolinha de Status -->
+                            <Ellipse Fill="#4CAF50" 
+                                     WidthRequest="12" 
+                                     HeightRequest="12" 
+                                     HorizontalOptions="End" 
+                                     VerticalOptions="Start"
+                                     Margin="0,5,5,0"/>
+                        </Grid>
+                        
+                        <!-- Nome e Info -->
+                        <Label Text="ESP32 Suínos" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Online" 
+                               FontSize="12" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="Device1Tap"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+                
+                <!-- Dispositivo 2 - ESP32 Granja Aves -->
+                <Frame x:Name="Device2Frame" 
+                       BackgroundColor="White" 
+                       CornerRadius="25" 
+                       Padding="20" 
+                       HasShadow="True"
+                       HeightRequest="160"
+                       Grid.Row="0" Grid.Column="1">
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Status e Ícone -->
+                        <Grid>
+                            <Image Source="icon_generic.png" 
+                                   HeightRequest="50" 
+                                   WidthRequest="50" 
+                                   HorizontalOptions="Center"/>
+                            <!-- Bolinha de Status -->
+                            <Ellipse Fill="#757575" 
+                                     WidthRequest="12" 
+                                     HeightRequest="12" 
+                                     HorizontalOptions="End" 
+                                     VerticalOptions="Start"
+                                     Margin="0,5,5,0"/>
+                        </Grid>
+                        
+                        <!-- Nome e Info -->
+                        <Label Text="ESP32 Aves" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Offline" 
+                               FontSize="12" 
+                               TextColor="#757575" 
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="Device2Tap"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+                
+                <!-- Dispositivo 3 - ESP32 Controle Geral -->
+                <Frame x:Name="Device3Frame" 
+                       BackgroundColor="White" 
+                       CornerRadius="25" 
+                       Padding="20" 
+                       HasShadow="True"
+                       HeightRequest="160"
+                       Grid.Row="1" Grid.Column="0">
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Status e Ícone -->
+                        <Grid>
+                            <Image Source="icon_generic.png" 
+                                   HeightRequest="50" 
+                                   WidthRequest="50" 
+                                   HorizontalOptions="Center"/>
+                            <!-- Bolinha de Status -->
+                            <Ellipse Fill="#4CAF50" 
+                                     WidthRequest="12" 
+                                     HeightRequest="12" 
+                                     HorizontalOptions="End" 
+                                     VerticalOptions="Start"
+                                     Margin="0,5,5,0"/>
+                        </Grid>
+                        
+                        <!-- Nome e Info -->
+                        <Label Text="Controle Geral" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Online" 
+                               FontSize="12" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="Device3Tap"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+                
+                <!-- Dispositivo 4 - ESP32 Monitoramento -->
+                <Frame x:Name="Device4Frame" 
+                       BackgroundColor="White" 
+                       CornerRadius="25" 
+                       Padding="20" 
+                       HasShadow="True"
+                       HeightRequest="160"
+                       Grid.Row="1" Grid.Column="1">
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Status e Ícone -->
+                        <Grid>
+                            <Image Source="icon_generic.png" 
+                                   HeightRequest="50" 
+                                   WidthRequest="50" 
+                                   HorizontalOptions="Center"/>
+                            <!-- Bolinha de Status -->
+                            <Ellipse Fill="#4CAF50" 
+                                     WidthRequest="12" 
+                                     HeightRequest="12" 
+                                     HorizontalOptions="End" 
+                                     VerticalOptions="Start"
+                                     Margin="0,5,5,0"/>
+                        </Grid>
+                        
+                        <!-- Nome e Info -->
+                        <Label Text="Monitoramento" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="#3B5A7A" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Online" 
+                               FontSize="12" 
+                               TextColor="#4CAF50" 
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="Device4Tap"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+                
+            </Grid>
+            
+            <!-- Info adicional -->
+            <Frame BackgroundColor="#E2E8F0" 
+                   CornerRadius="15" 
+                   Padding="15" 
+                   Margin="0,20,0,0"
+                   HasShadow="False">
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="ℹ️" FontSize="18"/>
+                    <Label Text="Toque em um dispositivo para controlá-lo" 
+                           FontSize="14" 
+                           TextColor="#3B5A7A" 
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
             </Frame>
-
-            <!-- Meus Dispositivos -->
-            <Frame x:Name="DevicesFrame" Grid.Row="0" Grid.Column="1" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
-                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                    <Image Source="icon_devices.png" HeightRequest="56" WidthRequest="56"/>
-                    <Label Text="Meus Dispositivos" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
-                </StackLayout>
-            </Frame>
-
-            <!-- Setup -->
-            <Frame x:Name="SetupFrame" Grid.Row="1" Grid.Column="0" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
-                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                    <Image Source="icon_settings.png" HeightRequest="56" WidthRequest="56"/>
-                    <Label Text="Setup" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
-                </StackLayout>
-            </Frame>
-
-            <!-- Logout -->
-            <Frame x:Name="LogoutFrame" Grid.Row="1" Grid.Column="1" CornerRadius="24" BackgroundColor="#3B5A7A" HeightRequest="140" WidthRequest="140" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center">
-                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                    <Image Source="icon_logout.png" HeightRequest="56" WidthRequest="56"/>
-                    <Label Text="Logout" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
-                </StackLayout>
-            </Frame>
-        </Grid>
+            
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

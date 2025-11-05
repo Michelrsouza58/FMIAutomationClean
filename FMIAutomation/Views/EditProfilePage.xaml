@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.EditProfilePage"
+             BackgroundColor="White"
+             Title="Editar Perfil">
+    
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="arrow_back.png" TextOverride="" />
+    </Shell.BackButtonBehavior>
+    
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            
+            <!-- Header -->
+            <Frame BackgroundColor="#007ACC" CornerRadius="25" Padding="25" HasShadow="True" Margin="0,10,0,20">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="✏️" FontSize="48" HorizontalOptions="Center" TextColor="White"/>
+                    <Label Text="Editar Perfil" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                    <Label Text="Atualize suas informações pessoais" FontSize="16" TextColor="#E3F2FD" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Formulário -->
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Nome -->
+                <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Nome Completo" FontSize="16" FontAttributes="Bold" TextColor="#007ACC"/>
+                        <Entry x:Name="NameEntry" 
+                               Text=""
+                               FontSize="18" 
+                               BackgroundColor="#F5F5F5" 
+                               TextColor="Black"
+                               PlaceholderColor="#999"
+                               Placeholder="Digite seu nome completo"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <!-- Email -->
+                <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Email" FontSize="16" FontAttributes="Bold" TextColor="#007ACC"/>
+                        <Entry x:Name="EmailEntry" 
+                               Text=""
+                               FontSize="18" 
+                               BackgroundColor="#F5F5F5" 
+                               TextColor="Black"
+                               PlaceholderColor="#999"
+                               Keyboard="Email"
+                               Placeholder="Digite seu email"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <!-- Telefone -->
+                <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Telefone" FontSize="16" FontAttributes="Bold" TextColor="#007ACC"/>
+                        <Entry x:Name="PhoneEntry" 
+                               Text=""
+                               FontSize="18" 
+                               BackgroundColor="#F5F5F5" 
+                               TextColor="Black"
+                               PlaceholderColor="#999"
+                               Keyboard="Telephone"
+                               Placeholder="Digite seu telefone"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <!-- Botões -->
+                <VerticalStackLayout Spacing="15" Margin="0,20,0,0">
+                    <Button x:Name="SaveButton" 
+                            Text="💾  Salvar Alterações" 
+                            FontSize="18" 
+                            FontAttributes="Bold"
+                            BackgroundColor="#4CAF50" 
+                            TextColor="White" 
+                            CornerRadius="25" 
+                            HeightRequest="55"
+                            HorizontalOptions="Fill"/>
+                    
+                    <Button x:Name="CancelButton" 
+                            Text="❌  Cancelar" 
+                            FontSize="16" 
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent" 
+                            TextColor="#666" 
+                            CornerRadius="25" 
+                            HeightRequest="50"
+                            BorderWidth="2"
+                            BorderColor="#DDD"
+                            HorizontalOptions="Fill"/>
+                </VerticalStackLayout>
+                
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

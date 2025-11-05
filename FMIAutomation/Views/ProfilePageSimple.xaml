@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.ProfilePageSimple"
+             BackgroundColor="White">
+    
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            
+            <!-- Teste Básico -->
+            <Label Text="🧪 TESTE - ProfilePage Simples" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   TextColor="Black" 
+                   HorizontalOptions="Center" />
+            
+            <!-- Avatar Simples -->
+            <Border HeightRequest="100" WidthRequest="100" 
+                    BackgroundColor="LightGray" 
+                    HorizontalOptions="Center">
+                <Border.StrokeShape>
+                    <Ellipse />
+                </Border.StrokeShape>
+                <Label Text="👤" FontSize="48" 
+                       TextColor="Black" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center" />
+            </Border>
+            
+            <!-- Info do Usuário -->
+            <VerticalStackLayout Spacing="8">
+                <Label x:Name="NameLabelSimple" 
+                       Text="Carregando nome..." 
+                       FontSize="20" 
+                       FontAttributes="Bold" 
+                       TextColor="Black" 
+                       HorizontalOptions="Center"/>
+                <Label x:Name="EmailLabelSimple" 
+                       Text="Carregando email..." 
+                       FontSize="16" 
+                       TextColor="Gray" 
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+            
+            <!-- Opções Simples -->
+            <Frame BackgroundColor="LightBlue" 
+                   CornerRadius="10" 
+                   Padding="20" 
+                   Margin="10">
+                <Label Text="✏️ Editar Perfil" 
+                       FontSize="18" 
+                       TextColor="Black" />
+            </Frame>
+            
+            <Frame BackgroundColor="LightGreen" 
+                   CornerRadius="10" 
+                   Padding="20" 
+                   Margin="10">
+                <Label Text="🔒 Alterar Senha" 
+                       FontSize="18" 
+                       TextColor="Black" />
+            </Frame>
+            
+            <Frame BackgroundColor="LightCoral" 
+                   CornerRadius="10" 
+                   Padding="20" 
+                   Margin="10">
+                <Label Text="🚪 Sair da Conta" 
+                       FontSize="18" 
+                       TextColor="Black" />
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

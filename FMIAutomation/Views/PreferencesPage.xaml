@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FMIAutomation.Views.PreferencesPage"
+             BackgroundColor="White"
+             Title="Preferências">
+    
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="arrow_back.png" TextOverride="" />
+    </Shell.BackButtonBehavior>
+    
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            
+            <!-- Header -->
+            <Frame BackgroundColor="#9C27B0" CornerRadius="25" Padding="25" HasShadow="True" Margin="0,10,0,20">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="⚙️" FontSize="48" HorizontalOptions="Center" TextColor="White"/>
+                    <Label Text="Preferências" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                    <Label Text="Personalize sua experiência" FontSize="16" TextColor="#F3E5F5" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <!-- Seção Aparência -->
+            <Label Text="🎨 Aparência" FontSize="20" FontAttributes="Bold" TextColor="#9C27B0" Margin="0,10,0,5"/>
+            
+            <!-- Tema -->
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#F3E5F5" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="🌙" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Tema Escuro" FontSize="18" FontAttributes="Bold" TextColor="#9C27B0"/>
+                        <Label Text="Ativar modo escuro" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Switch x:Name="DarkModeSwitch" Grid.Column="2" VerticalOptions="Center" OnColor="#9C27B0"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Seção Notificações -->
+            <Label Text="🔔 Notificações" FontSize="20" FontAttributes="Bold" TextColor="#9C27B0" Margin="0,30,0,5"/>
+            
+            <!-- Notificações Push -->
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#E8F5E8" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="📱" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Notificações Push" FontSize="18" FontAttributes="Bold" TextColor="#4CAF50"/>
+                        <Label Text="Receber notificações no celular" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Switch x:Name="PushNotificationsSwitch" Grid.Column="2" VerticalOptions="Center" OnColor="#4CAF50" IsToggled="True"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Notificações por Email -->
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#E3F2FD" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="📧" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Notificações por Email" FontSize="18" FontAttributes="Bold" TextColor="#2196F3"/>
+                        <Label Text="Receber emails de atualização" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Switch x:Name="EmailNotificationsSwitch" Grid.Column="2" VerticalOptions="Center" OnColor="#2196F3"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Seção Idioma -->
+            <Label Text="🌐 Idioma e Região" FontSize="20" FontAttributes="Bold" TextColor="#9C27B0" Margin="0,30,0,5"/>
+            
+            <!-- Seleção de Idioma -->
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#FFF3E0" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="🇧🇷" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Idioma" FontSize="18" FontAttributes="Bold" TextColor="#FF9800"/>
+                        <Label Text="Português (Brasil)" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Label Text="›" FontSize="24" TextColor="#9C27B0" Grid.Column="2" VerticalOptions="Center"/>
+                </Grid>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="LanguageTap"/>
+                </Frame.GestureRecognizers>
+            </Frame>
+            
+            <!-- Seção Privacidade -->
+            <Label Text="🔒 Privacidade e Segurança" FontSize="20" FontAttributes="Bold" TextColor="#9C27B0" Margin="0,30,0,5"/>
+            
+            <!-- Analytics -->
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#FFEBEE" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="📊" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Dados de Uso" FontSize="18" FontAttributes="Bold" TextColor="#F44336"/>
+                        <Label Text="Compartilhar dados para melhorias" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Switch x:Name="AnalyticsSwitch" Grid.Column="2" VerticalOptions="Center" OnColor="#F44336"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Botão Salvar -->
+            <Button x:Name="SavePreferencesButton" 
+                    Text="💾  Salvar Preferências" 
+                    FontSize="18" 
+                    FontAttributes="Bold"
+                    BackgroundColor="#9C27B0" 
+                    TextColor="White" 
+                    CornerRadius="25" 
+                    HeightRequest="55"
+                    Margin="0,30,0,20"
+                    HorizontalOptions="Fill"/>
+                
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

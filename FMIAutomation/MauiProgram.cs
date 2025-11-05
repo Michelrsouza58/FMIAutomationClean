@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using FMIAutomation.Services;
 
 namespace FMIAutomation;
 
@@ -19,14 +20,22 @@ public static class MauiProgram
 	builder.Logging.AddDebug();
 #endif
 
+		// Registrar AuthService como singleton
+		string firebaseUrl = "https://fmiautomation-60e6e-default-rtdb.firebaseio.com/";
+		builder.Services.AddSingleton<Services.IAuthService>(sp => new Services.AuthService(firebaseUrl));
 
-	// Registrar AuthService como singleton
-	string firebaseUrl = "https://fmiautomation-60e6e-default-rtdb.firebaseio.com/";
-	builder.Services.AddSingleton<Services.IAuthService>(sp => new Services.AuthService(firebaseUrl));
+		// Registrar Pages para DI
+		builder.Services.AddTransient<MainPage>();
+		builder.Services.AddTransient<Views.ProfilePage>();
 
-	// Registrar MainPage para DI
-	builder.Services.AddTransient<MainPage>();
+		var app = builder.Build();
 
-	return builder.Build();
+		// Inicializar tema na inicialização do app
+		Task.Run(async () =>
+		{
+			await ThemeService.InitializeAsync();
+		});
+
+		return app;
     }
 }

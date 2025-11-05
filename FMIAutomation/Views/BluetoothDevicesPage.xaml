@@ -2,12 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.BluetoothDevicesPage"
-             BackgroundColor="#25303B">
+             BackgroundColor="{DynamicResource BackgroundColor}">
     <Grid RowDefinitions="Auto, *">
         <!-- Header com botão de adicionar -->
         <Grid Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
-            <Label Text="Dispositivos Bluetooth" TextColor="White" FontSize="24" FontAttributes="Bold" />
-            <Button x:Name="AddDeviceBtn" Text="+" FontSize="28" WidthRequest="48" HeightRequest="48" CornerRadius="24" BackgroundColor="#3B5A7A" TextColor="White" Grid.Column="1" />
+            <Label Text="Dispositivos Bluetooth" TextColor="{DynamicResource TextColor}" FontSize="24" FontAttributes="Bold" />
+            <Button x:Name="AddDeviceBtn" Text="+" FontSize="28" WidthRequest="48" HeightRequest="48" CornerRadius="24" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource CardColor}" Grid.Column="1" />
         </Grid>
         <!-- Grid de dispositivos -->
         <ScrollView Grid.Row="1">
@@ -15,10 +15,10 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
-                            <Frame HeightRequest="72" WidthRequest="72" CornerRadius="36" BackgroundColor="#3B5A7A" HasShadow="False" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Frame HeightRequest="72" WidthRequest="72" CornerRadius="36" BackgroundColor="{DynamicResource CardColor}" HasShadow="True" HorizontalOptions="Center" VerticalOptions="Center">
                                 <Image Source="bluetooth_icon.svg" HeightRequest="40" WidthRequest="40" VerticalOptions="Center" HorizontalOptions="Center" />
                             </Frame>
-                            <Label Text="{Binding Name}" TextColor="White" FontSize="14" HorizontalTextAlignment="Center" />
+                            <Label Text="{Binding Name}" TextColor="{DynamicResource TextColor}" FontSize="14" HorizontalTextAlignment="Center" FontAttributes="Bold" />
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

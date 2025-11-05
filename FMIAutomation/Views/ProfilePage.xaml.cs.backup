@@ -1,0 +1,1366 @@
+using Microsoft.Maui.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using FMIAutomation.Services;
+
+namespace FMIAutomation.Views
+{
+    public partial class ProfilePage : ContentPage
+    {
+        private readonly Services.IAuthService _authService;
+        private string _userEmail = "";
+        
+        public ProfilePage()
+        {
+            InitializeComponent();
+            
+            // Recupera serviço de autenticação de forma mais robusta
+            _authService = GetAuthService();
+            
+            // Carrega dados do usuário logado
+            _ = LoadUserData();
+            
+            // Inicializa tema e preferências
+            _ = InitializeThemeAsync();
+
+            // Configura gestos para as opções
+            SetupGestures();
+            
+            // Inscrever-se para mudanças de tema
+            ThemeService.ThemeChanged += OnThemeChanged;
+        }
+
+        private void OnThemeChanged(object? sender, ThemeService.AppTheme newTheme)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                UpdateThemeColors();
+            });
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Desinscrever-se do evento para evitar vazamentos de memória
+            ThemeService.ThemeChanged -= OnThemeChanged;
+        }
+
+        private Services.IAuthService GetAuthService()
+        {
+            try
+            {
+                // Primeira tentativa: usar Handler.MauiContext
+                if (Application.Current?.Handler?.MauiContext?.Services != null)
+                {
+                    var service = Application.Current.Handler.MauiContext.Services.GetService<Services.IAuthService>();
+                    if (service != null) return service;
+                }
+
+                // Segunda tentativa: usar ServiceProvider estático se disponível
+                var serviceProvider = Application.Current?.Handler?.MauiContext?.Services;
+                if (serviceProvider != null)
+                {
+                    var service = serviceProvider.GetService(typeof(Services.IAuthService)) as Services.IAuthService;
+                    if (service != null) return service;
+                }
+
+                // Fallback: criar uma instância direta
+                return new Services.AuthService("https://fmiautomation-60e6e-default-rtdb.firebaseio.com/");
+            }
+            catch
+            {
+                // Em caso de erro, criar uma instância direta
+                return new Services.AuthService("https://fmiautomation-60e6e-default-rtdb.firebaseio.com/");
+            }
+        }
+
+        private async Task InitializeThemeAsync()
+        {
+            await ThemeService.InitializeAsync();
+            UpdateThemeColors();
+        }
+
+        private void UpdateThemeColors()
+        {
+            if (Application.Current?.Resources != null)
+            {
+                this.BackgroundColor = (Color)Application.Current.Resources["BackgroundColor"];
+            }
+        }
+
+        private void SetupGestures()
+        {
+            // Editar Perfil
+            var editProfileTap = new TapGestureRecognizer();
+            editProfileTap.Tapped += async (s, e) => {
+                if (string.IsNullOrEmpty(_userEmail)) 
+                { 
+                    await DisplayAlert("Erro", "Usuário não identificado. Faça login novamente.", "OK"); 
+                    return; 
+                }
+                await EditProfileAsync();
+            };
+            EditProfileOption.GestureRecognizers.Add(editProfileTap);
+
+            // Alterar Senha
+            var changePasswordTap = new TapGestureRecognizer();
+            changePasswordTap.Tapped += async (s, e) => {
+                if (string.IsNullOrEmpty(_userEmail)) 
+                { 
+                    await DisplayAlert("Erro", "Usuário não identificado. Faça login novamente.", "OK"); 
+                    return; 
+                }
+                await ChangePasswordAsync();
+            };
+            ChangePasswordOption.GestureRecognizers.Add(changePasswordTap);
+
+            // Preferências
+            var preferencesTap = new TapGestureRecognizer();
+            preferencesTap.Tapped += async (s, e) => await ShowPreferencesModal();
+            PreferencesOption.GestureRecognizers.Add(preferencesTap);
+
+            // Sobre o App
+            var aboutTap = new TapGestureRecognizer();
+            aboutTap.Tapped += (s, e) => DisplayAlert("Sobre o App", "FMIAutomation v1.0\n\n🚀 App de Automação FMI\n📱 Desenvolvido com .NET MAUI\n🔥 Firebase Backend\n\n© 2024 - Todos os direitos reservados", "OK");
+            AboutOption.GestureRecognizers.Add(aboutTap);
+
+            // Excluir Conta
+            var deleteAccountTap = new TapGestureRecognizer();
+            deleteAccountTap.Tapped += async (s, e) => {
+                if (string.IsNullOrEmpty(_userEmail)) 
+                { 
+                    await DisplayAlert("Erro", "Usuário não identificado. Faça login novamente.", "OK"); 
+                    return; 
+                }
+                await DeleteAccountAsync();
+            };
+            DeleteAccountOption.GestureRecognizers.Add(deleteAccountTap);
+
+            // Logout
+            LogoutTap.Tapped += async (s, e) => {
+                var confirm = await DisplayAlert("Sair", "Deseja realmente sair da sua conta?", "Sim", "Não");
+                if (!confirm) return;
+                
+                try 
+                { 
+                    Microsoft.Maui.Storage.SecureStorage.Remove("login_time");
+                    Microsoft.Maui.Storage.SecureStorage.Remove("user_email");
+                } 
+                catch {}
+                
+                var mainPage = (FMIAutomation.MainPage?)Application.Current?.Handler?.MauiContext?.Services.GetService(typeof(FMIAutomation.MainPage));
+                if (Application.Current != null)
+                {
+                    Application.Current.MainPage = mainPage ?? new FMIAutomation.MainPage(new FMIAutomation.Services.AuthService("https://fmiautomation-60e6e-default-rtdb.firebaseio.com/"));
+                }
+            };
+            
+            // Gestos para imagem de perfil
+            ProfileImageTap.Tapped += OnProfileImageTapped;
+            CloseModalButton.Clicked += OnCloseModalClicked;
+            ViewImageOption.GestureRecognizers.Add(new TapGestureRecognizer 
+            { 
+                Command = new Command(OnViewImageTapped) 
+            });
+            ChangeImageOption.GestureRecognizers.Add(new TapGestureRecognizer 
+            { 
+                Command = new Command(OnChangeImageTapped) 
+            });
+            RemoveImageOption.GestureRecognizers.Add(new TapGestureRecognizer 
+            { 
+                Command = new Command(OnRemoveImageTapped) 
+            });
+            CloseImageViewTap.Tapped += OnCloseImageViewTapped;
+            CloseImageViewButton.Clicked += OnCloseImageViewClicked;
+        }
+
+        // Modal elegante de preferências com design moderno
+        private async Task ShowPreferencesModal()
+        {
+            var currentTheme = await ThemeService.GetCurrentThemeAsync();
+            var currentLanguage = await ThemeService.GetCurrentLanguageAsync();
+            
+            // Definir cores baseadas no tema
+            var isLightTheme = currentTheme == ThemeService.AppTheme.Light;
+            var backgroundColor = isLightTheme ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#1F2937");
+            var textColor = isLightTheme ? Color.FromArgb("#1F2937") : Color.FromArgb("#FFFFFF");
+            var cardColor = isLightTheme ? Color.FromArgb("#F8FAFC") : Color.FromArgb("#374151");
+            var subtitleColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF");
+            
+            var themeSwitch = new Switch
+            {
+                IsToggled = currentTheme == ThemeService.AppTheme.Light,
+                OnColor = Color.FromArgb("#3B82F6"),
+                ThumbColor = Colors.White
+            };
+            
+            var languagePicker = new Picker
+            {
+                Title = "Selecione o idioma",
+                ItemsSource = new List<string> { "🇧🇷 Português", "🇺🇸 English" },
+                SelectedIndex = currentLanguage == "en" ? 1 : 0,
+                FontSize = 16,
+                Margin = new Thickness(0, 8),
+                TextColor = textColor,
+                BackgroundColor = cardColor
+            };
+
+            var modalContent = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 24,
+                    Padding = 24,
+                    Children =
+                    {
+                        // Header
+                        new VerticalStackLayout
+                        {
+                            Spacing = 8,
+                            Children =
+                            {
+                                new Label 
+                                { 
+                                    Text = "⚙️ Preferências", 
+                                    FontSize = 28, 
+                                    FontAttributes = FontAttributes.Bold,
+                                    HorizontalOptions = LayoutOptions.Center,
+                                    TextColor = textColor
+                                },
+                                new Label 
+                                { 
+                                    Text = "Personalize sua experiência", 
+                                    FontSize = 16, 
+                                    HorizontalOptions = LayoutOptions.Center,
+                                    TextColor = subtitleColor
+                                }
+                            }
+                        },
+
+                        // Seção Aparência
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 16,
+                                Children =
+                                {
+                                    new Label { Text = "🎨 Aparência", FontSize = 20, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    
+                                    // Controle de tema
+                                    new HorizontalStackLayout
+                                    {
+                                        Spacing = 16,
+                                        Children =
+                                        {
+                                            new VerticalStackLayout
+                                            {
+                                                Spacing = 4,
+                                                HorizontalOptions = LayoutOptions.Start,
+                                                Children =
+                                                {
+                                                    new Label { Text = "Tema Claro", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                                    new Label { Text = "Alternar entre tema claro e escuro", FontSize = 14, TextColor = subtitleColor }
+                                                }
+                                            },
+                                            themeSwitch
+                                        }
+                                    }
+                                }
+                            }
+                        },
+
+                        // Seção Idioma
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 16,
+                                Children =
+                                {
+                                    new Label { Text = "🌍 Idioma", FontSize = 20, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    
+                                    new VerticalStackLayout
+                                    {
+                                        Spacing = 8,
+                                        Children =
+                                        {
+                                            new Label { Text = "Idioma do aplicativo", FontSize = 16, TextColor = textColor },
+                                            languagePicker
+                                        }
+                                    }
+                                }
+                            }
+                        },
+
+                        // Botões de ação
+                        new VerticalStackLayout
+                        {
+                            Spacing = 12,
+                            Margin = new Thickness(0, 16, 0, 0),
+                            Children =
+                            {
+                                new Button
+                                {
+                                    HeightRequest = 50,
+                                    BackgroundColor = Color.FromArgb("#3B82F6"),
+                                    Text = "💾 Salvar Alterações", 
+                                    FontSize = 16, 
+                                    FontAttributes = FontAttributes.Bold,
+                                    TextColor = Colors.White,
+                                    CornerRadius = 12
+                                },
+                                
+                                new Button
+                                {
+                                    HeightRequest = 50,
+                                    BackgroundColor = Colors.Transparent,
+                                    Text = "❌ Cancelar", 
+                                    FontSize = 16,
+                                    TextColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                                    BorderColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                                    BorderWidth = 1,
+                                    CornerRadius = 12
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var modalPage = new ContentPage
+            {
+                Content = modalContent,
+                BackgroundColor = backgroundColor
+            };
+
+            // Configurar eventos
+            themeSwitch.Toggled += async (s, e) =>
+            {
+                try
+                {
+                    var newTheme = e.Value ? ThemeService.AppTheme.Light : ThemeService.AppTheme.Dark;
+                    
+                    // Aplicar tema de forma mais simples e segura
+                    await Task.Run(async () =>
+                    {
+                        await ThemeService.SetThemeAsync(newTheme);
+                    });
+                    
+                    // Feedback sem fechar o modal imediatamente
+                    await DisplayAlert("✅ Tema Alterado", 
+                        e.Value ? "Tema claro aplicado! ☀️" : "Tema escuro aplicado! 🌙", 
+                        "OK");
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Erro", $"Erro ao alterar tema: {ex.Message}", "OK");
+                    // Reverter o switch em caso de erro
+                    themeSwitch.IsToggled = !e.Value;
+                }
+            };
+
+            languagePicker.SelectedIndexChanged += async (s, e) =>
+            {
+                if (s is Picker picker)
+                {
+                    var selectedLang = picker.SelectedIndex == 1 ? "en" : "pt";
+                    await ThemeService.SetLanguageAsync(selectedLang);
+                    
+                    // Mostrar feedback
+                    await DisplayAlert("Idioma Alterado", 
+                        picker.SelectedIndex == 1 ? "Language changed to English" : "Idioma alterado para Português", 
+                        "OK");
+                }
+            };
+
+            var saveButton = new Button
+            {
+                HeightRequest = 50,
+                BackgroundColor = Color.FromArgb("#3B82F6"),
+                Text = "💾 Salvar Alterações", 
+                FontSize = 16, 
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.White,
+                CornerRadius = 12
+            };
+            
+            var cancelButton = new Button
+            {
+                HeightRequest = 50,
+                BackgroundColor = Colors.Transparent,
+                Text = "❌ Cancelar", 
+                FontSize = 16,
+                TextColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                BorderColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                BorderWidth = 1,
+                CornerRadius = 12
+            };
+
+            // Substituir botões no layout
+            var buttonStack = (VerticalStackLayout)((VerticalStackLayout)modalContent.Content).Children[3];
+            buttonStack.Clear();
+            buttonStack.Add(saveButton);
+            buttonStack.Add(cancelButton);
+
+            // Configurar eventos
+            saveButton.Clicked += async (s, e) =>
+            {
+                await DisplayAlert("Sucesso", "Preferências salvas com sucesso! ✅", "OK");
+                if (Application.Current?.MainPage != null)
+                {
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+                }
+                UpdateThemeColors();
+            };
+
+            cancelButton.Clicked += async (s, e) =>
+            {
+                if (Application.Current?.MainPage != null)
+                {
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+                }
+            };
+
+            // Aplicar tema atual ao modal
+            UpdateModalTheme(modalPage, currentTheme);
+
+            if (Application.Current?.MainPage != null)
+            {
+                await Application.Current.MainPage.Navigation.PushModalAsync(modalPage);
+            }
+        }
+
+        private void UpdateModalTheme(ContentPage modalPage, ThemeService.AppTheme theme)
+        {
+            if (theme == ThemeService.AppTheme.Light)
+            {
+                modalPage.BackgroundColor = Color.FromArgb("#F8FAFC");
+                // Atualizar cores dos elementos filhos se necessário
+            }
+            else
+            {
+                modalPage.BackgroundColor = Color.FromArgb("#25303B");
+                // Atualizar cores dos elementos filhos se necessário
+            }
+        }
+
+        private async Task LoadUserData()
+        {
+            try
+            {
+                // Recupera email do usuário logado do SecureStorage
+                var email = await Microsoft.Maui.Storage.SecureStorage.GetAsync("user_email");
+                
+                System.Diagnostics.Debug.WriteLine($"[ProfilePage] Email recuperado: '{email}'");
+                
+                if (string.IsNullOrEmpty(email))
+                {
+                    // Tentar alternativas comuns de chaves
+                    email = await Microsoft.Maui.Storage.SecureStorage.GetAsync("email");
+                    if (string.IsNullOrEmpty(email))
+                    {
+                        email = await Microsoft.Maui.Storage.SecureStorage.GetAsync("userEmail");
+                    }
+                    
+                    System.Diagnostics.Debug.WriteLine($"[ProfilePage] Email alternativo: '{email}'");
+                }
+                
+                if (string.IsNullOrEmpty(email))
+                {
+                    NameLabel.Text = "Usuário não logado";
+                    EmailLabel.Text = "Faça login novamente";
+                    _userEmail = "";
+                    return;
+                }
+                
+                _userEmail = email;
+                
+                // Busca informações completas do usuário no Firebase através do AuthService
+                try
+                {
+                    var userInfo = await _authService.GetUserInfoAsync(email);
+                    
+                    if (userInfo != null)
+                    {
+                        // Preenche os dados no perfil
+                        NameLabel.Text = userInfo.Nome ?? "Nome não informado";
+                        EmailLabel.Text = userInfo.Email ?? email;
+                        
+                        // Carrega imagem de perfil
+                        UpdateProfileImageDisplay(userInfo.ProfileImageBase64);
+                        
+                        System.Diagnostics.Debug.WriteLine($"[ProfilePage] Dados carregados - Nome: '{userInfo.Nome}', Email: '{userInfo.Email}', Telefone: '{userInfo.Telefone}'");
+                    }
+                    else
+                    {
+                        NameLabel.Text = "Dados não encontrados";
+                        EmailLabel.Text = email;
+                        System.Diagnostics.Debug.WriteLine($"[ProfilePage] UserInfo retornou null para email: '{email}'");
+                    }
+                }
+                catch (Exception ex)
+                { 
+                    NameLabel.Text = "Erro ao carregar dados";
+                    EmailLabel.Text = email;
+                    System.Diagnostics.Debug.WriteLine($"[ProfilePage] Erro ao buscar info do usuário: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ProfilePage] Erro geral LoadUserData: {ex.Message}");
+                NameLabel.Text = "Erro";
+                EmailLabel.Text = "Erro ao carregar dados";
+                _userEmail = "";
+            }
+        }
+
+
+
+        private async Task EditProfileAsync()
+        {
+            try
+            {
+                await ShowEditProfileModal();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao abrir edição de perfil: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task ShowEditProfileModal()
+        {
+            // Buscar dados atuais do usuário no Firebase
+            UserInfo? currentUserInfo = null;
+            try
+            {
+                currentUserInfo = await _authService.GetUserInfoAsync(_userEmail);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[EditProfile] Erro ao buscar dados: {ex.Message}");
+            }
+
+            var currentTheme = await ThemeService.GetCurrentThemeAsync();
+            var isLightTheme = currentTheme == ThemeService.AppTheme.Light;
+            var backgroundColor = isLightTheme ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#1F2937");
+            var textColor = isLightTheme ? Color.FromArgb("#1F2937") : Color.FromArgb("#FFFFFF");
+            var cardColor = isLightTheme ? Color.FromArgb("#F8FAFC") : Color.FromArgb("#374151");
+            var subtitleColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF");
+
+            var nameEntry = new Entry
+            {
+                Text = currentUserInfo?.Nome ?? NameLabel.Text,
+                FontSize = 16,
+                TextColor = textColor,
+                BackgroundColor = cardColor,
+                Placeholder = "Digite seu nome completo",
+                Margin = new Thickness(0, 8)
+            };
+
+            var emailEntry = new Entry
+            {
+                Text = currentUserInfo?.Email ?? EmailLabel.Text,
+                FontSize = 16,
+                TextColor = textColor,
+                BackgroundColor = cardColor,
+                Keyboard = Keyboard.Email,
+                Placeholder = "Digite seu e-mail",
+                Margin = new Thickness(0, 8)
+            };
+
+            var telefoneEntry = new Entry
+            {
+                Text = currentUserInfo?.Telefone ?? "",
+                FontSize = 16,
+                TextColor = textColor,
+                BackgroundColor = cardColor,
+                Keyboard = Keyboard.Telephone,
+                Placeholder = "Digite seu telefone (opcional)",
+                Margin = new Thickness(0, 8)
+            };
+
+            var modalContent = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 24,
+                    Padding = 24,
+                    Children =
+                    {
+                        // Header
+                        new VerticalStackLayout
+                        {
+                            Spacing = 8,
+                            Children =
+                            {
+                                new Label 
+                                { 
+                                    Text = "✏️ Editar Perfil", 
+                                    FontSize = 28, 
+                                    FontAttributes = FontAttributes.Bold,
+                                    HorizontalOptions = LayoutOptions.Center,
+                                    TextColor = textColor
+                                },
+                                new Label 
+                                { 
+                                    Text = "Atualize suas informações pessoais", 
+                                    FontSize = 16, 
+                                    HorizontalOptions = LayoutOptions.Center,
+                                    TextColor = subtitleColor
+                                }
+                            }
+                        },
+
+                        // Campo Nome
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 12,
+                                Children =
+                                {
+                                    new Label { Text = "👤 Nome Completo", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    nameEntry
+                                }
+                            }
+                        },
+
+                        // Campo Email
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 12,
+                                Children =
+                                {
+                                    new Label { Text = "📧 E-mail", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    emailEntry
+                                }
+                            }
+                        },
+
+                        // Campo Telefone
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 12,
+                                Children =
+                                {
+                                    new Label { Text = "📱 Telefone", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    new Label { Text = "(Opcional)", FontSize = 12, TextColor = subtitleColor },
+                                    telefoneEntry
+                                }
+                            }
+                        },
+
+
+                    }
+                }
+            };
+
+            var modalPage = new ContentPage
+            {
+                Content = modalContent,
+                BackgroundColor = backgroundColor
+            };
+
+            // Criar botões diretamente
+            var saveButton = new Button
+            {
+                HeightRequest = 50,
+                BackgroundColor = Color.FromArgb("#10B981"),
+                Text = "💾 Salvar Alterações", 
+                FontSize = 16, 
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.White,
+                CornerRadius = 12
+            };
+
+            var cancelButton = new Button
+            {
+                HeightRequest = 50,
+                BackgroundColor = Colors.Transparent,
+                Text = "❌ Cancelar", 
+                FontSize = 16,
+                TextColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                BorderColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                BorderWidth = 1,
+                CornerRadius = 12
+            };
+
+            // Adicionar botões ao layout principal
+            var mainLayout = (VerticalStackLayout)modalContent.Content;
+            var buttonStackLayout = new VerticalStackLayout
+            {
+                Spacing = 12,
+                Margin = new Thickness(0, 16, 0, 0),
+                Children = { saveButton, cancelButton }
+            };
+            mainLayout.Add(buttonStackLayout);
+
+            // Configurar eventos
+            saveButton.Clicked += async (s, e) =>
+            {
+                var newName = nameEntry.Text?.Trim();
+                var newEmail = emailEntry.Text?.Trim();
+                var newTelefone = telefoneEntry.Text?.Trim();
+
+                if (string.IsNullOrWhiteSpace(newName))
+                {
+                    await DisplayAlert("Erro", "Nome é obrigatório!", "OK");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(newEmail))
+                {
+                    await DisplayAlert("Erro", "E-mail é obrigatório!", "OK");
+                    return;
+                }
+
+                try
+                {
+                    saveButton.IsEnabled = false;
+                    saveButton.Text = "💾 Salvando...";
+                    
+                    // Usar o método mais completo para atualizar perfil
+                    var result = await _authService.UpdateProfileWithImageAsync(
+                        _userEmail, 
+                        newName, 
+                        newEmail, 
+                        string.IsNullOrWhiteSpace(newTelefone) ? null : newTelefone,
+                        null); // Por enquanto sem imagem
+
+                    if (result == null)
+                    {
+                        await DisplayAlert("✅ Sucesso", "Perfil atualizado com sucesso!", "OK");
+                        
+                        // Atualizar email no SecureStorage se mudou
+                        if (newEmail != _userEmail)
+                        {
+                            await Microsoft.Maui.Storage.SecureStorage.SetAsync("user_email", newEmail);
+                            _userEmail = newEmail;
+                        }
+                        
+                        // Recarregar dados na página
+                        _ = LoadUserData();
+                        
+                        if (Application.Current?.MainPage != null)
+                        {
+                            await Application.Current.MainPage.Navigation.PopModalAsync();
+                        }
+                    }
+                    else
+                    {
+                        await DisplayAlert("❌ Erro", result, "OK");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("❌ Erro", $"Erro ao atualizar: {ex.Message}", "OK");
+                }
+                finally
+                {
+                    saveButton.IsEnabled = true;
+                    saveButton.Text = "💾 Salvar Alterações";
+                }
+            };
+
+            cancelButton.Clicked += async (s, e) =>
+            {
+                if (Application.Current?.MainPage != null)
+                {
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+                }
+            };
+
+            if (Application.Current?.MainPage != null)
+            {
+                await Application.Current.MainPage.Navigation.PushModalAsync(modalPage);
+            }
+        }
+
+        private async Task ChangePasswordAsync()
+        {
+            try
+            {
+                var passwordModal = new ChangePasswordModal(_authService, _userEmail);
+                await Application.Current?.MainPage?.Navigation.PushModalAsync(passwordModal, false);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao abrir alteração de senha: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task ShowChangePasswordModal()
+        {
+            var currentTheme = await ThemeService.GetCurrentThemeAsync();
+            var isLightTheme = currentTheme == ThemeService.AppTheme.Light;
+            var backgroundColor = isLightTheme ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#1F2937");
+            var textColor = isLightTheme ? Color.FromArgb("#1F2937") : Color.FromArgb("#FFFFFF");
+            var cardColor = isLightTheme ? Color.FromArgb("#F8FAFC") : Color.FromArgb("#374151");
+            var subtitleColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF");
+
+            var oldPasswordEntry = new Entry
+            {
+                IsPassword = true,
+                FontSize = 16,
+                TextColor = textColor,
+                BackgroundColor = cardColor,
+                Placeholder = "Digite sua senha atual",
+                Margin = new Thickness(0, 8)
+            };
+
+            var newPasswordEntry = new Entry
+            {
+                IsPassword = true,
+                FontSize = 16,
+                TextColor = textColor,
+                BackgroundColor = cardColor,
+                Placeholder = "Digite a nova senha",
+                Margin = new Thickness(0, 8)
+            };
+
+            var confirmPasswordEntry = new Entry
+            {
+                IsPassword = true,
+                FontSize = 16,
+                TextColor = textColor,
+                BackgroundColor = cardColor,
+                Placeholder = "Confirme a nova senha",
+                Margin = new Thickness(0, 8)
+            };
+
+            var modalContent = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 24,
+                    Padding = 24,
+                    Children =
+                    {
+                        // Header
+                        new VerticalStackLayout
+                        {
+                            Spacing = 8,
+                            Children =
+                            {
+                                new Label 
+                                { 
+                                    Text = "🔒 Alterar Senha", 
+                                    FontSize = 28, 
+                                    FontAttributes = FontAttributes.Bold,
+                                    HorizontalOptions = LayoutOptions.Center,
+                                    TextColor = textColor
+                                },
+                                new Label 
+                                { 
+                                    Text = "Mantenha sua conta segura", 
+                                    FontSize = 16, 
+                                    HorizontalOptions = LayoutOptions.Center,
+                                    TextColor = subtitleColor
+                                }
+                            }
+                        },
+
+                        // Campo Senha Atual
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 12,
+                                Children =
+                                {
+                                    new Label { Text = "🔐 Senha Atual", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    oldPasswordEntry
+                                }
+                            }
+                        },
+
+                        // Campo Nova Senha
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 12,
+                                Children =
+                                {
+                                    new Label { Text = "🆕 Nova Senha", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    newPasswordEntry,
+                                    new Label { Text = "Mínimo 6 caracteres", FontSize = 12, TextColor = subtitleColor }
+                                }
+                            }
+                        },
+
+                        // Campo Confirmar Senha
+                        new Frame
+                        {
+                            CornerRadius = 16,
+                            Padding = 20,
+                            Margin = new Thickness(0, 8),
+                            HasShadow = true,
+                            BackgroundColor = cardColor,
+                            Content = new VerticalStackLayout
+                            {
+                                Spacing = 12,
+                                Children =
+                                {
+                                    new Label { Text = "✅ Confirmar Nova Senha", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = textColor },
+                                    confirmPasswordEntry
+                                }
+                            }
+                        },
+
+                        // Botões de ação
+                        new VerticalStackLayout
+                        {
+                            Spacing = 12,
+                            Margin = new Thickness(0, 16, 0, 0),
+                            Children =
+                            {
+                                new Button
+                                {
+                                    HeightRequest = 50,
+                                    BackgroundColor = Color.FromArgb("#3B82F6"),
+                                    Text = "🔄 Alterar Senha", 
+                                    FontSize = 16, 
+                                    FontAttributes = FontAttributes.Bold,
+                                    TextColor = Colors.White,
+                                    CornerRadius = 12
+                                },
+                                
+                                new Button
+                                {
+                                    HeightRequest = 50,
+                                    BackgroundColor = Colors.Transparent,
+                                    Text = "❌ Cancelar", 
+                                    FontSize = 16,
+                                    TextColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                                    BorderColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                                    BorderWidth = 1,
+                                    CornerRadius = 12
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var modalPage = new ContentPage
+            {
+                Content = modalContent,
+                BackgroundColor = backgroundColor
+            };
+
+            var changeButton = new Button
+            {
+                HeightRequest = 50,
+                BackgroundColor = Color.FromArgb("#3B82F6"),
+                Text = "🔄 Alterar Senha", 
+                FontSize = 16, 
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.White,
+                CornerRadius = 12
+            };
+            
+            var cancelButton = new Button
+            {
+                HeightRequest = 50,
+                BackgroundColor = Colors.Transparent,
+                Text = "❌ Cancelar", 
+                FontSize = 16,
+                TextColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                BorderColor = isLightTheme ? Color.FromArgb("#6B7280") : Color.FromArgb("#9CA3AF"),
+                BorderWidth = 1,
+                CornerRadius = 12
+            };
+
+            // Substituir botões no layout
+            var buttonStack = (VerticalStackLayout)((VerticalStackLayout)modalContent.Content).Children[4];
+            buttonStack.Clear();
+            buttonStack.Add(changeButton);
+            buttonStack.Add(cancelButton);
+
+            // Configurar eventos
+            changeButton.Clicked += async (s, e) =>
+            {
+                var oldPassword = oldPasswordEntry.Text?.Trim();
+                var newPassword = newPasswordEntry.Text?.Trim();
+                var confirmPassword = confirmPasswordEntry.Text?.Trim();
+
+                if (string.IsNullOrWhiteSpace(oldPassword))
+                {
+                    await DisplayAlert("❌ Erro", "Digite sua senha atual!", "OK");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(newPassword))
+                {
+                    await DisplayAlert("❌ Erro", "Digite a nova senha!", "OK");
+                    return;
+                }
+
+                if (newPassword.Length < 6)
+                {
+                    await DisplayAlert("❌ Erro", "A nova senha deve ter pelo menos 6 caracteres!", "OK");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(confirmPassword))
+                {
+                    await DisplayAlert("❌ Erro", "Confirme a nova senha!", "OK");
+                    return;
+                }
+
+                if (newPassword != confirmPassword)
+                {
+                    await DisplayAlert("❌ Erro", "As senhas não coincidem!", "OK");
+                    return;
+                }
+
+                try
+                {
+                    var result = await _authService.ChangePasswordAsync(_userEmail, oldPassword, newPassword, confirmPassword);
+                    if (result == null)
+                    {
+                        await DisplayAlert("✅ Sucesso", "Senha alterada com sucesso!", "OK");
+                        
+                        if (Application.Current?.MainPage != null)
+                        {
+                            await Application.Current.MainPage.Navigation.PopModalAsync();
+                        }
+                    }
+                    else
+                    {
+                        await DisplayAlert("❌ Erro", result, "OK");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("❌ Erro", $"Erro ao alterar senha: {ex.Message}", "OK");
+                }
+            };
+
+            cancelButton.Clicked += async (s, e) =>
+            {
+                if (Application.Current?.MainPage != null)
+                {
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+                }
+            };
+
+            if (Application.Current?.MainPage != null)
+            {
+                await Application.Current.MainPage.Navigation.PushModalAsync(modalPage);
+            }
+        }
+
+        private async Task DeleteAccountAsync()
+        {
+            string senha = await SecurePasswordPrompt("Excluir Conta", "Digite sua senha para confirmar:");
+            if (string.IsNullOrWhiteSpace(senha)) return;
+            bool confirm = await DisplayAlert("Excluir Conta", "Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.", "Sim", "Não");
+            if (!confirm) return;
+            var result = await _authService.DeleteAccountAsync(_userEmail, senha);
+            if (result)
+            {
+                await DisplayAlert("Conta Excluída", "Sua conta foi excluída.", "OK");
+                try { Microsoft.Maui.Storage.SecureStorage.Remove("login_time"); Microsoft.Maui.Storage.SecureStorage.Remove("user_email"); } catch {}
+                var mainPage = (FMIAutomation.MainPage?)Application.Current?.Handler?.MauiContext?.Services.GetService(typeof(FMIAutomation.MainPage));
+                if (Application.Current != null)
+                {
+                    Application.Current.MainPage = mainPage ?? new FMIAutomation.MainPage(new FMIAutomation.Services.AuthService("https://fmiautomation-60e6e-default-rtdb.firebaseio.com/"));
+                }
+            }
+            else
+            {
+                await DisplayAlert("Erro", "Senha incorreta ou erro ao excluir.", "OK");
+            }
+        }
+
+        // Métodos para gerenciamento de imagem de perfil
+        private void OnProfileImageTapped(object? sender, EventArgs e)
+        {
+            ShowImageOptionsModal();
+        }
+
+        private void ShowImageOptionsModal()
+        {
+            ImageOptionsModal.IsVisible = true;
+        }
+
+        private void HideImageOptionsModal()
+        {
+            ImageOptionsModal.IsVisible = false;
+        }
+
+        private void OnCloseModalClicked(object? sender, EventArgs e)
+        {
+            HideImageOptionsModal();
+        }
+
+        private void OnViewImageTapped()
+        {
+            HideImageOptionsModal();
+            if (ProfileImage.IsVisible && !string.IsNullOrEmpty(ProfileImage.Source?.ToString()))
+            {
+                ShowImageViewModal();
+            }
+            else
+            {
+                DisplayAlert("Aviso", "Nenhuma imagem de perfil para visualizar.", "OK");
+            }
+        }
+
+        private void ShowImageViewModal()
+        {
+            FullSizeProfileImage.Source = ProfileImage.Source;
+            ImageViewModal.IsVisible = true;
+        }
+
+        private void HideImageViewModal()
+        {
+            ImageViewModal.IsVisible = false;
+        }
+
+        private void OnCloseImageViewTapped(object? sender, EventArgs e)
+        {
+            HideImageViewModal();
+        }
+
+        private void OnCloseImageViewClicked(object? sender, EventArgs e)
+        {
+            HideImageViewModal();
+        }
+
+        private async void OnChangeImageTapped()
+        {
+            HideImageOptionsModal();
+            await PickAndUploadImage();
+        }
+
+        private async void OnRemoveImageTapped()
+        {
+            HideImageOptionsModal();
+            
+            var confirm = await DisplayAlert("Remover Imagem", 
+                "Deseja remover sua foto de perfil?", "Sim", "Não");
+            
+            if (confirm)
+            {
+                await RemoveProfileImage();
+            }
+        }
+
+        private async Task PickAndUploadImage()
+        {
+            try
+            {
+                var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+                {
+                    Title = "Selecione uma foto"
+                });
+
+                if (result != null)
+                {
+                    await ProcessSelectedImage(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao selecionar imagem: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task ProcessSelectedImage(FileResult photo)
+        {
+            try
+            {
+                // Converte a imagem para Base64
+                using var stream = await photo.OpenReadAsync();
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+                var base64String = Convert.ToBase64String(imageBytes);
+
+                // Atualiza o perfil com a nova imagem
+                await UpdateProfileWithImage(base64String);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao processar imagem: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task UpdateProfileWithImage(string imageBase64)
+        {
+            try
+            {
+                // Busca informações atuais do usuário
+                var userInfo = await _authService.GetUserInfoAsync(_userEmail);
+                if (userInfo == null)
+                {
+                    await DisplayAlert("Erro", "Não foi possível carregar as informações do usuário.", "OK");
+                    return;
+                }
+
+                // Atualiza o perfil mantendo os dados existentes
+                var result = await _authService.UpdateProfileWithImageAsync(
+                    _userEmail, 
+                    userInfo.Nome ?? "", 
+                    userInfo.Email ?? _userEmail,
+                    userInfo.Telefone,
+                    imageBase64
+                );
+
+                if (result == null) // Sucesso
+                {
+                    await DisplayAlert("Sucesso", "Foto de perfil atualizada com sucesso!", "OK");
+                    await LoadUserData(); // Recarrega os dados
+                }
+                else
+                {
+                    await DisplayAlert("Erro", result, "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao atualizar foto: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task RemoveProfileImage()
+        {
+            try
+            {
+                // Busca informações atuais do usuário
+                var userInfo = await _authService.GetUserInfoAsync(_userEmail);
+                if (userInfo == null)
+                {
+                    await DisplayAlert("Erro", "Não foi possível carregar as informações do usuário.", "OK");
+                    return;
+                }
+
+                // Atualiza o perfil removendo a imagem (enviando string vazia)
+                var result = await _authService.UpdateProfileWithImageAsync(
+                    _userEmail, 
+                    userInfo.Nome ?? "", 
+                    userInfo.Email ?? _userEmail,
+                    userInfo.Telefone,
+                    "" // Remove a imagem
+                );
+
+                if (result == null) // Sucesso
+                {
+                    await DisplayAlert("Sucesso", "Foto de perfil removida com sucesso!", "OK");
+                    await LoadUserData(); // Recarrega os dados
+                }
+                else
+                {
+                    await DisplayAlert("Erro", result, "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao remover foto: {ex.Message}", "OK");
+            }
+        }
+
+        private void UpdateProfileImageDisplay(string? imageBase64)
+        {
+            if (string.IsNullOrEmpty(imageBase64))
+            {
+                // Mostra avatar padrão
+                ProfileImage.IsVisible = false;
+                DefaultAvatarLabel.IsVisible = true;
+            }
+            else
+            {
+                // Mostra imagem do usuário
+                var imageBytes = Convert.FromBase64String(imageBase64);
+                ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                ProfileImage.IsVisible = true;
+                DefaultAvatarLabel.IsVisible = false;
+            }
+        }
+
+        // Workaround para prompt de senha (sem isPassword nativo)
+        private async Task<string> SecurePasswordPrompt(string title, string message)
+        {
+            string senha = string.Empty;
+            var tcs = new TaskCompletionSource<string>();
+            var entry = new Entry { IsPassword = true, Placeholder = "Senha" };
+            var layout = new VerticalStackLayout { Padding = 10, Spacing = 10 };
+            layout.Add(new Label { Text = message });
+            layout.Add(entry);
+            var popup = new ContentPage
+            {
+                Content = new VerticalStackLayout
+                {
+                    Children =
+                    {
+                        layout,
+                        new HorizontalStackLayout
+                        {
+                            Spacing = 10,
+                            Children =
+                            {
+                                new Button { Text = "OK", Command = new Command(() => {
+                                    tcs.TrySetResult(entry.Text ?? "");
+                                    if (Application.Current?.MainPage?.Navigation != null)
+                                        Application.Current.MainPage.Navigation.PopModalAsync();
+                                }) },
+                                new Button { Text = "Cancelar", Command = new Command(() => {
+                                    tcs.TrySetResult("");
+                                    if (Application.Current?.MainPage?.Navigation != null)
+                                        Application.Current.MainPage.Navigation.PopModalAsync();
+                                }) }
+                            }
+                        }
+                    }
+                }
+            };
+            if (Application.Current?.MainPage?.Navigation != null)
+                await Application.Current.MainPage.Navigation.PushModalAsync(popup);
+            senha = await tcs.Task;
+            return senha;
+        }
+    }
+}

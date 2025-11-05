@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="splashGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main circle -->
+  <circle cx="228" cy="228" r="200" fill="url(#splashGradient)"/>
+  
+  <!-- FMI Text -->
+  <text x="228" y="250" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
+        text-anchor="middle" fill="#FFFFFF">FMI</text>
+  
+  <!-- Loading indicator dots -->
+  <circle cx="180" cy="320" r="6" fill="#FFFFFF" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="228" cy="320" r="6" fill="#FFFFFF" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;0.3;0.6" dur="1.5s" begin="0.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="276" cy="320" r="6" fill="#FFFFFF" opacity="0.4">
+    <animate attributeName="opacity" values="0.4;0.3;0.4" dur="1.5s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+</svg>

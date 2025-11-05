@@ -18,7 +18,7 @@ namespace FMIAutomation.ViewModels
             Devices.Add(new BluetoothDevice { Name = "Teclado BT", Address = "22:33:44:55:66:77", IsPaired = false });
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

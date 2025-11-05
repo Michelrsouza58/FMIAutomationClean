@@ -3,36 +3,73 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.MainPage">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30,0" Spacing="20" BackgroundColor="#25303B">
+    <ScrollView BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
+        <VerticalStackLayout Padding="30,0" Spacing="20" BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
             <Frame Padding="0" IsClippedToBounds="True" CornerRadius="80" HeightRequest="160" WidthRequest="160" HasShadow="False" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0,40,0,10">
                 <Image Source="logo_fmi.png" HeightRequest="160" WidthRequest="160" Aspect="AspectFill" />
             </Frame>
 
             <!-- Toggle Login/Cadastro -->
             <Grid ColumnDefinitions="*,*" HeightRequest="48" Margin="0,0,0,10">
-                <Button x:Name="LoginTab" Text="LOGIN" BackgroundColor="#3B5A7A" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
-                <Button x:Name="CadastroTab" Text="CADASTRAR" BackgroundColor="White" TextColor="#3B5A7A" FontAttributes="Bold" CornerRadius="10" Grid.Column="1"/>
+                <Button x:Name="LoginTab" Text="LOGIN" 
+                        BackgroundColor="#3B5A7A" 
+                        TextColor="White" 
+                        FontAttributes="Bold" 
+                        CornerRadius="10"/>
+                <Button x:Name="CadastroTab" Text="CADASTRAR" 
+                        BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#FFFFFF}" 
+                        TextColor="{AppThemeBinding Light=#3B5A7A, Dark=#3B5A7A}" 
+                        FontAttributes="Bold" 
+                        CornerRadius="10" 
+                        Grid.Column="1"/>
             </Grid>
 
-            <!-- Campos de Login -->
-            <Entry x:Name="EmailEntry" Placeholder="E-mail" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="#B0B0B0" Margin="0,0,0,5" HeightRequest="48"/>
-            <Entry x:Name="SenhaEntry" Placeholder="Senha" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="#B0B0B0" HeightRequest="48"/>
+            <!-- Campo Nome (apenas no cadastro) -->
+            <Entry x:Name="NomeEntry" Placeholder="Nome completo" BackgroundColor="Transparent" 
+                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+                   HeightRequest="48" IsVisible="False"/>
 
-            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+            <!-- Campo Email -->
+            <Entry x:Name="EmailEntry" Placeholder="E-mail" BackgroundColor="Transparent" 
+                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+                   Margin="0,0,0,5" HeightRequest="48"/>
+
+            <!-- Campo Confirmar Email (apenas no cadastro) -->
+            <Entry x:Name="ConfirmarEmailEntry" Placeholder="Confirmar e-mail" BackgroundColor="Transparent" 
+                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+                   Margin="0,0,0,5" HeightRequest="48" IsVisible="False"/>
+
+            <!-- Campo Telefone (apenas no cadastro) -->
+            <Entry x:Name="TelefoneEntry" Placeholder="Telefone (opcional)" BackgroundColor="Transparent" 
+                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+                   Keyboard="Telephone" HeightRequest="48" IsVisible="False"/>
+
+            <!-- Campo Senha -->
+            <Entry x:Name="SenhaEntry" Placeholder="Senha" IsPassword="True" BackgroundColor="Transparent" 
+                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+                   HeightRequest="48"/>
+
+            <!-- Campo Confirmar Senha (apenas no cadastro) -->
+            <Entry x:Name="ConfirmarSenhaEntry" Placeholder="Confirmar senha" IsPassword="True" BackgroundColor="Transparent" 
+                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+                   HeightRequest="48" IsVisible="False"/>
+
+            <!-- Lembrar senha (apenas no login) -->
+            <HorizontalStackLayout x:Name="LembrarStackLayout" Spacing="8" VerticalOptions="Center">
                 <CheckBox x:Name="LembrarCheck" Color="#3B5A7A"/>
-                <Label Text="Lembrar-me a senha?" TextColor="White" FontSize="14" VerticalOptions="Center"/>
+                <Label Text="Lembrar-me a senha?" 
+                       TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                       FontSize="14" VerticalOptions="Center"/>
             </HorizontalStackLayout>
 
             <Button x:Name="EntrarBtn" Text="ENTRAR" BackgroundColor="#3B5A7A" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="48" Margin="0,10,0,0"/>
 
-            <!-- Botões Sociais -->
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,20,0,0">
-                <ImageButton x:Name="FacebookBtn" Source="icon_facebook.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent"/>
-                <ImageButton x:Name="GoogleBtn" Source="icon_google.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent"/>
-                <ImageButton x:Name="AppleBtn" Source="icon_apple.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent"/>
-            </HorizontalStackLayout>
-            <Label Text="OU ENTRAR COM" TextColor="White" FontSize="12" HorizontalOptions="Center" Margin="0,10,0,0"/>
         </VerticalStackLayout>
     </ScrollView>
 

@@ -28,6 +28,21 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <!-- Cores específicas para Login -->
+    <Color x:Key="LoginBackgroundLight">#F5F7FA</Color>
+    <Color x:Key="LoginBackgroundDark">#1A1D29</Color>
+    <Color x:Key="LoginTextLight">#2D3748</Color>
+    <Color x:Key="LoginTextDark">#FFFFFF</Color>
+    <Color x:Key="LoginPlaceholderLight">#718096</Color>
+    <Color x:Key="LoginPlaceholderDark">#A0AEC0</Color>
+    <Color x:Key="LoginButtonPrimary">#3B5A7A</Color>
+    <Color x:Key="LoginButtonSecondary">#E2E8F0</Color>
+
+    <!-- Dynamic Resources for Login -->
+    <SolidColorBrush x:Key="LoginBackgroundColor" Color="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"/>
+    <SolidColorBrush x:Key="LoginTextColor" Color="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}"/>
+    <SolidColorBrush x:Key="LoginPlaceholderColor" Color="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"/>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

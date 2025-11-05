@@ -1,4 +1,5 @@
 using Microsoft.Maui.Controls;
+using FMIAutomation.Services;
 
 namespace FMIAutomation.Views
 {
@@ -11,6 +12,25 @@ namespace FMIAutomation.Views
             this.BindingContext = vm;
             DevicesCollection.ItemsSource = vm.Devices;
             AddDeviceBtn.Clicked += (s, e) => ShowScanModal();
+            
+            // Inscrever-se para mudanças de tema
+            ThemeService.ThemeChanged += OnThemeChanged;
+        }
+
+        private void OnThemeChanged(object? sender, ThemeService.AppTheme newTheme)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // Força a atualização das cores
+                this.BackgroundColor = (Color)Application.Current!.Resources["BackgroundColor"];
+            });
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Desinscrever-se do evento para evitar vazamentos de memória
+            ThemeService.ThemeChanged -= OnThemeChanged;
         }
 
         private void ShowScanModal()

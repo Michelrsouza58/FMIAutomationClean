@@ -2,81 +2,224 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.ProfilePage"
-             BackgroundColor="#25303B">
+             BackgroundColor="White"
+             Title="Perfil">
+    
     <ScrollView>
-        <VerticalStackLayout Spacing="24" Padding="32,48,32,32">
-            <!-- Avatar -->
-            <Frame HeightRequest="120" WidthRequest="120" CornerRadius="60" Padding="0" HorizontalOptions="Center" BackgroundColor="#374151">
-                <Image Source="user_avatar.png" HeightRequest="120" WidthRequest="120" Aspect="AspectFill"/>
-            </Frame>
-            <!-- Nome e email -->
-            <Label x:Name="NameLabel" Text="Nome do Usuário" FontSize="22" TextColor="White" HorizontalOptions="Center"/>
-            <Label x:Name="EmailLabel" Text="email@exemplo.com" FontSize="16" TextColor="#B0B0B0" HorizontalOptions="Center"/>
-            <!-- Opções elegantes com ícones -->
-            <Frame CornerRadius="16" BackgroundColor="#374151" Padding="0">
-                <VerticalStackLayout>
-                    <!-- Editar Dados -->
-                    <Grid x:Name="EditProfileOption" Padding="16,12" ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="24"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="icon_profile.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
-                        <Label Text="Editar Dados" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
-                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
-                    </Grid>
-                    <BoxView HeightRequest="1" Color="#2D3748"/>
-                    <!-- Alterar Senha -->
-                    <Grid x:Name="ChangePasswordOption" Padding="16,12" ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="24"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="icon_settings.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
-                        <Label Text="Alterar Senha" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
-                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
-                    </Grid>
-                    <BoxView HeightRequest="1" Color="#2D3748"/>
-                    <!-- Preferências -->
-                    <Grid x:Name="PreferencesOption" Padding="16,12" ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="24"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="icon_settings.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
-                        <Label Text="Preferências" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
-                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
-                    </Grid>
-                    <BoxView HeightRequest="1" Color="#2D3748"/>
-                    <!-- Sobre o App -->
-                    <Grid x:Name="AboutOption" Padding="16,12" ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="24"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="icon_home.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
-                        <Label Text="Sobre o App" FontSize="18" TextColor="White" Grid.Column="1" VerticalOptions="Center"/>
-                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
-                    </Grid>
-                    <BoxView HeightRequest="1" Color="#2D3748"/>
-                    <!-- Excluir Conta -->
-                    <Grid x:Name="DeleteAccountOption" Padding="16,12" ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="24"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="icon_logout.png" HeightRequest="24" WidthRequest="24" Grid.Column="0"/>
-                        <Label Text="Excluir Conta" FontSize="18" TextColor="#EF4444" Grid.Column="1" VerticalOptions="Center"/>
-                        <Image Source="icon_settings.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Opacity="0.5"/>
-                    </Grid>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            
+            <!-- Header com Avatar e Info -->
+            <Frame BackgroundColor="White" CornerRadius="25" Padding="30" HasShadow="True" Margin="0,10,0,20">
+                <VerticalStackLayout Spacing="20">
+                    <!-- Avatar clicável com gradiente -->
+                    <Border x:Name="ProfileImageBorder" 
+                            HeightRequest="120" WidthRequest="120" 
+                            BackgroundColor="#F5F5F5" 
+                            Stroke="#007ACC"
+                            StrokeThickness="3"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="ProfileImageTap" />
+                        </Border.GestureRecognizers>
+                        <Grid>
+                            <Image x:Name="ProfileImage" IsVisible="False" Aspect="AspectFill" />
+                            <Label x:Name="DefaultAvatarLabel" Text="👤" FontSize="56" TextColor="#007ACC" 
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            
+                            <!-- Ícone de câmera moderno -->
+                            <Border BackgroundColor="#007ACC" 
+                                    HeightRequest="36" WidthRequest="36"
+                                    HorizontalOptions="End" VerticalOptions="End" 
+                                    Margin="5">
+                                <Border.StrokeShape>
+                                    <Ellipse />
+                                </Border.StrokeShape>
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="2,2" Radius="8" Opacity="0.3"/>
+                                </Border.Shadow>
+                                <Label Text="📷" FontSize="18" TextColor="White" 
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Nome e email com design moderno -->
+                    <VerticalStackLayout Spacing="12">
+                        <Label x:Name="NameLabel" 
+                               Text="Carregando..." 
+                               FontSize="26" 
+                               FontAttributes="Bold" 
+                               TextColor="#2C3E50" 
+                               HorizontalOptions="Center"/>
+                        <Frame BackgroundColor="#E3F2FD" 
+                               CornerRadius="20" 
+                               Padding="15,8" 
+                               HorizontalOptions="Center"
+                               HasShadow="False">
+                            <Label x:Name="EmailLabel" 
+                                   Text="Carregando..." 
+                                   FontSize="16" 
+                                   TextColor="#1565C0" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </Frame>
-            <Button Text="Sair" x:Name="LogoutBtn" BackgroundColor="#EF4444" TextColor="White" CornerRadius="12" HeightRequest="48" FontAttributes="Bold"/>
+
+            <!-- Seção Configurações da Conta -->
+            <Label Text="Configurações da Conta" FontSize="20" FontAttributes="Bold" TextColor="#007ACC" Margin="0,20,0,10"/>
+            
+            <!-- Editar Perfil -->
+            <Frame x:Name="EditProfileOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#E3F2FD" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="✏️" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Editar Perfil" FontSize="18" FontAttributes="Bold" TextColor="#1565C0"/>
+                        <Label Text="Alterar nome e informações pessoais" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Alterar Senha -->
+            <Frame x:Name="ChangePasswordOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#FFF3E0" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="🔒" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Alterar Senha" FontSize="18" FontAttributes="Bold" TextColor="#FF9800"/>
+                        <Label Text="Atualizar sua senha de acesso" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Seção Configurações Gerais -->
+            <Label Text="Configurações Gerais" FontSize="20" FontAttributes="Bold" TextColor="#007ACC" Margin="0,30,0,10"/>
+            
+            <!-- Preferências -->
+            <Frame x:Name="PreferencesOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#F3E5F5" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="⚙️" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Preferências" FontSize="18" FontAttributes="Bold" TextColor="#9C27B0"/>
+                        <Label Text="Tema, idioma e configurações" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Sobre o App -->
+            <Frame x:Name="AboutOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#E8F5E8" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="ℹ️" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Sobre o App" FontSize="18" FontAttributes="Bold" TextColor="#4CAF50"/>
+                        <Label Text="Versão e informações do aplicativo" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Label Text="›" FontSize="24" TextColor="#007ACC" Grid.Column="2" VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Seção Zona Perigosa -->
+            <Label Text="Zona Perigosa" FontSize="20" FontAttributes="Bold" TextColor="#D32F2F" Margin="0,30,0,10"/>
+            
+            <!-- Excluir Conta -->
+            <Frame x:Name="DeleteAccountOption" BackgroundColor="White" CornerRadius="20" Padding="20" Margin="5" HasShadow="True">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border BackgroundColor="#FFEBEE" HeightRequest="50" WidthRequest="50" 
+                            HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                        <Label Text="🗑️" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Excluir Conta" FontSize="18" FontAttributes="Bold" TextColor="#D32F2F"/>
+                        <Label Text="Remover permanentemente sua conta" FontSize="14" TextColor="#666"/>
+                    </VerticalStackLayout>
+                    
+                    <Label Text="›" FontSize="24" TextColor="#D32F2F" Grid.Column="2" VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+
+            <!-- Botão de Logout -->
+            <Button x:Name="LogoutButton" 
+                    Text="🚪  Sair da Conta" 
+                    FontSize="18" 
+                    FontAttributes="Bold"
+                    BackgroundColor="#D32F2F" 
+                    TextColor="White" 
+                    CornerRadius="25" 
+                    HeightRequest="50"
+                    Margin="5,20,5,0"
+                    HorizontalOptions="Fill"/>
         </VerticalStackLayout>
     </ScrollView>
+
 </ContentPage>
