@@ -10,7 +10,6 @@ namespace FMIAutomation.Views
             
             // Configura eventos
             SavePreferencesButton.Clicked += OnSavePreferencesClicked;
-            LanguageTap.Tapped += OnLanguageTapped;
             
             // Carrega preferências salvas
             LoadPreferences();
@@ -67,18 +66,6 @@ namespace FMIAutomation.Views
             }
         }
 
-        private async void OnLanguageTapped(object sender, EventArgs e)
-        {
-            var languages = new string[] { "Português (Brasil)", "English (US)", "Español (ES)" };
-            
-            var action = await DisplayActionSheet("Selecionar Idioma", "Cancelar", null, languages);
-            
-            if (action != null && action != "Cancelar")
-            {
-                // Aqui implementaria a mudança de idioma
-                await DisplayAlert("Idioma", $"Idioma '{action}' será aplicado na próxima abertura do app.", "OK");
-                Preferences.Set("Language", action);
-            }
-        }
+
     }
 }
