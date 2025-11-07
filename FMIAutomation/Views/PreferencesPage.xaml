@@ -9,6 +9,15 @@
         <BackButtonBehavior IconOverride="arrow_back.png" TextOverride="" />
     </Shell.BackButtonBehavior>
     
+    <!-- Configuração específica da barra de navegação -->
+    <ContentPage.Resources>
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="#2563EB" />
+            <Setter Property="BarTextColor" Value="White" />
+            <Setter Property="IconColor" Value="White" />
+        </Style>
+    </ContentPage.Resources>
+    
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
             

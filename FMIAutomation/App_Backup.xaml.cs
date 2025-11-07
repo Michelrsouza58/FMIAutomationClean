@@ -1,0 +1,1 @@
+// Backup do App.xaml.cs atual antes das mudanças drásticas

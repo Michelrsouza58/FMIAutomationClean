@@ -4,7 +4,7 @@ using FMIAutomation.Services;
 
 namespace FMIAutomation.Views
 {
-    public partial class ProfilePage : ContentPage
+    public partial class ProfilePage : BaseContentPage
     {
         private readonly Services.IAuthService _authService;
         private string _userEmail = "";
@@ -68,6 +68,7 @@ namespace FMIAutomation.Views
             // Options
             var editProfileTap = new TapGestureRecognizer();
             editProfileTap.Tapped += async (s, e) => {
+                RegisterUserActivity();
                 if (string.IsNullOrEmpty(_userEmail)) 
                 { 
                     await DisplayAlert("Erro", "Usuário não identificado. Faça login novamente.", "OK"); 
@@ -79,6 +80,7 @@ namespace FMIAutomation.Views
 
             var changePasswordTap = new TapGestureRecognizer();
             changePasswordTap.Tapped += async (s, e) => {
+                RegisterUserActivity();
                 if (string.IsNullOrEmpty(_userEmail)) 
                 { 
                     await DisplayAlert("Erro", "Usuário não identificado. Faça login novamente.", "OK"); 
@@ -89,11 +91,17 @@ namespace FMIAutomation.Views
             ChangePasswordOption.GestureRecognizers.Add(changePasswordTap);
 
             var preferencesTap = new TapGestureRecognizer();
-            preferencesTap.Tapped += async (s, e) => await Shell.Current.GoToAsync("PreferencesPage", true);
+            preferencesTap.Tapped += async (s, e) => { 
+                RegisterUserActivity(); 
+                await Shell.Current.GoToAsync("PreferencesPage", true); 
+            };
             PreferencesOption.GestureRecognizers.Add(preferencesTap);
 
             var aboutTap = new TapGestureRecognizer();
-            aboutTap.Tapped += (s, e) => DisplayAlert("Sobre o App", "FMIAutomation v1.0\n\n🚀 App de Automação FMI\n📱 Desenvolvido com .NET MAUI\n🔥 Firebase Backend\n\n© 2024 - Todos os direitos reservados", "OK");
+            aboutTap.Tapped += (s, e) => { 
+                RegisterUserActivity(); 
+                DisplayAlert("Sobre o App", "FMIAutomation v1.0\n\n🚀 App de Automação FMI\n📱 Desenvolvido com .NET MAUI\n🔥 Firebase Backend\n\n© 2024 - Todos os direitos reservados", "OK"); 
+            };
             AboutOption.GestureRecognizers.Add(aboutTap);
 
             var deleteAccountTap = new TapGestureRecognizer();

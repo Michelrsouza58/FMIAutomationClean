@@ -2,84 +2,190 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.BluetoothDevicesPage"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
-    <Grid RowDefinitions="Auto, Auto, Auto, *">
-        <!-- Header -->
-        <Grid Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto,Auto">
-            <Label Text="Dispositivos Bluetooth" TextColor="#3B5A7A" FontSize="24" FontAttributes="Bold" />
-            <Button x:Name="ScanBtn" Text="{Binding ScanButtonText}" FontSize="14" Padding="15,8" CornerRadius="20" BackgroundColor="#3B5A7A" TextColor="White" Grid.Column="1" Command="{Binding ScanCommand}" Margin="0,0,10,0" />
-            <Button x:Name="AddDeviceBtn" Text="+" FontSize="28" WidthRequest="48" HeightRequest="48" CornerRadius="24" BackgroundColor="#4CAF50" TextColor="White" Grid.Column="2" />
+             BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"
+             Title="Dispositivos Bluetooth">
+    
+    <!-- Configuração específica da barra de navegação -->
+    <ContentPage.Resources>
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="#2563EB" />
+            <Setter Property="BarTextColor" Value="White" />
+            <Setter Property="IconColor" Value="White" />
+        </Style>
+    </ContentPage.Resources>
+    
+    <Grid RowDefinitions="Auto, Auto, *" x:Name="MainLayout">
+        
+        <!-- Header com botão de scan -->
+        <Grid Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
+            <Label Text="Dispositivos Bluetooth" TextColor="#2563EB" FontSize="24" FontAttributes="Bold" />
+            <Button x:Name="ScanDevicesBtn" 
+                    Text="📡" 
+                    FontSize="24" 
+                    WidthRequest="50" 
+                    HeightRequest="50" 
+                    CornerRadius="25" 
+                    BackgroundColor="#2563EB" 
+                    TextColor="White" 
+                    Grid.Column="1"
+                    Shadow="{OnPlatform WinUI={x:Null}, Default={Shadow Brush=Black, Opacity=0.3, Radius=8, Offset='0,4'}}" />
         </Grid>
         
-        <!-- Status Bar -->
-        <Grid Row="1" Padding="20,0,20,10" ColumnDefinitions="*,Auto">
-            <Label Text="{Binding StatusMessage}" TextColor="#666" FontSize="14" VerticalOptions="Center" />
-            <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" Color="#3B5A7A" Grid.Column="1" />
-        </Grid>
+        <!-- Status do Scan -->
+        <Frame Grid.Row="1" 
+               x:Name="ScanStatusFrame" 
+               BackgroundColor="#E3F2FD" 
+               CornerRadius="15" 
+               Padding="15" 
+               Margin="20,0,20,10" 
+               IsVisible="False">
+            <HorizontalStackLayout Spacing="10">
+                <ActivityIndicator x:Name="ScanIndicator" 
+                                   IsRunning="False" 
+                                   Color="#2563EB" 
+                                   WidthRequest="20" 
+                                   HeightRequest="20"/>
+                <Label x:Name="ScanStatusLabel" 
+                       Text="Procurando dispositivos..." 
+                       TextColor="#2563EB" 
+                       FontSize="14" 
+                       VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Frame>
         
-        <!-- Dispositivos Pareados -->
-        <ScrollView Grid.Row="2" Padding="20,10,20,0">
-            <StackLayout>
-            <Label Text="Dispositivos Pareados" TextColor="#3B5A7A" FontSize="18" FontAttributes="Bold" Margin="0,0,0,10" />
-            <CollectionView ItemsSource="{Binding PairedDevices}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="15" ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
-                            <!-- Ícone do dispositivo -->
-                            <Label Grid.Column="0" Grid.RowSpan="2" Text="{Binding DeviceIcon}" FontSize="24" VerticalOptions="Center" Margin="0,0,15,0" />
-                            
-                            <!-- Nome e endereço -->
-                            <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" />
-                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding StatusText}" FontSize="12" TextColor="#666" />
-                            
-                            <!-- Botão de conexão -->
-                            <Button Grid.Column="2" Grid.RowSpan="2" Text="Conectar"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ConnectDeviceCommand}" 
-                                    CommandParameter="{Binding .}" 
-                                    BackgroundColor="#4CAF50" 
-                                    TextColor="White" FontSize="12" Padding="10,5" CornerRadius="15" Margin="5,0" />
-                            
-                            <!-- Botão de desparear -->
-                            <Button Grid.Column="3" Grid.RowSpan="2" Text="✕" 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.UnpairDeviceCommand}" 
-                                    CommandParameter="{Binding .}" 
-                                    BackgroundColor="#F44336" TextColor="White" FontSize="12" WidthRequest="30" HeightRequest="30" CornerRadius="15" />
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            </StackLayout>
-        </ScrollView>
-        
-        <!-- Dispositivos Descobertos -->
-        <ScrollView Grid.Row="3">
-            <StackLayout Padding="20,20,20,10">
-                <Label Text="Dispositivos Disponíveis" TextColor="#3B5A7A" FontSize="18" FontAttributes="Bold" Margin="0,0,0,10" />
-                <CollectionView ItemsSource="{Binding DiscoveredDevices}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="15" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
-                                <!-- Ícone do dispositivo -->
-                                <Label Grid.Column="0" Grid.RowSpan="2" Text="{Binding DeviceIcon}" FontSize="24" VerticalOptions="Center" Margin="0,0,15,0" />
-                                
-                                <!-- Nome e informações -->
-                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" />
-                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding SignalStrengthText}" FontSize="12" TextColor="#666" />
-                                
-                                <!-- Botão de parear -->
-                                <Button Grid.Column="2" Grid.RowSpan="2" Text="Parear" 
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.PairDeviceCommand}" 
-                                        CommandParameter="{Binding .}" 
-                                        BackgroundColor="#2196F3" TextColor="White" FontSize="12" Padding="10,5" CornerRadius="15" />
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+        <!-- Lista de dispositivos -->
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Padding="20" Spacing="15">
+                
+                <!-- Dispositivos Conectados -->
+                <VerticalStackLayout x:Name="ConnectedDevicesSection">
+                    <Label Text="🔗 Dispositivos Conectados" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#2563EB" 
+                           Margin="0,0,0,10"/>
+                    
+                    <CollectionView x:Name="ConnectedDevicesCollection" 
+                                    ItemsLayout="VerticalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BackgroundColor="White" 
+                                       CornerRadius="15" 
+                                       Padding="15" 
+                                       HasShadow="True" 
+                                       Margin="0,0,0,10">
+                                    <HorizontalStackLayout Spacing="15">
+                                        <Frame WidthRequest="50" 
+                                               HeightRequest="50" 
+                                               CornerRadius="25" 
+                                               BackgroundColor="#10B981" 
+                                               Padding="8">
+                                            <Label Text="📱" 
+                                                   FontSize="20" 
+                                                   TextColor="White" 
+                                                   HorizontalOptions="Center" 
+                                                   VerticalOptions="Center"/>
+                                        </Frame>
+                                        <VerticalStackLayout VerticalOptions="Center" 
+                                                             HorizontalOptions="StartAndExpand">
+                                            <Label Text="{Binding Name}" 
+                                                   FontSize="16" 
+                                                   FontAttributes="Bold" 
+                                                   TextColor="#2563EB"/>
+                                            <Label Text="Conectado" 
+                                                   FontSize="12" 
+                                                   TextColor="#10B981"/>
+                                        </VerticalStackLayout>
+                                        <Button Text="⚙️" 
+                                                BackgroundColor="#2563EB" 
+                                                TextColor="White" 
+                                                CornerRadius="20" 
+                                                WidthRequest="40" 
+                                                HeightRequest="40" 
+                                                FontSize="16"/>
+                                    </HorizontalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+                
+                <!-- Dispositivos Disponíveis -->
+                <VerticalStackLayout x:Name="AvailableDevicesSection">
+                    <Label Text="📡 Dispositivos Disponíveis" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#2563EB" 
+                           Margin="0,20,0,10"/>
+                    
+                    <CollectionView x:Name="AvailableDevicesCollection" 
+                                    ItemsLayout="VerticalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BackgroundColor="White" 
+                                       CornerRadius="15" 
+                                       Padding="15" 
+                                       HasShadow="True" 
+                                       Margin="0,0,0,10">
+                                    <HorizontalStackLayout Spacing="15">
+                                        <Frame WidthRequest="50" 
+                                               HeightRequest="50" 
+                                               CornerRadius="25" 
+                                               BackgroundColor="#94A3B8" 
+                                               Padding="8">
+                                            <Label Text="📱" 
+                                                   FontSize="20" 
+                                                   TextColor="White" 
+                                                   HorizontalOptions="Center" 
+                                                   VerticalOptions="Center"/>
+                                        </Frame>
+                                        <VerticalStackLayout VerticalOptions="Center" 
+                                                             HorizontalOptions="StartAndExpand">
+                                            <Label Text="{Binding Name}" 
+                                                   FontSize="16" 
+                                                   FontAttributes="Bold" 
+                                                   TextColor="#475569"/>
+                                            <Label Text="Disponível" 
+                                                   FontSize="12" 
+                                                   TextColor="#94A3B8"/>
+                                        </VerticalStackLayout>
+                                        <Button Text="🔗" 
+                                                BackgroundColor="#10B981" 
+                                                TextColor="White" 
+                                                CornerRadius="20" 
+                                                WidthRequest="40" 
+                                                HeightRequest="40" 
+                                                FontSize="16"/>
+                                    </HorizontalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
                 
                 <!-- Mensagem quando não há dispositivos -->
-                <Label Text="Nenhum dispositivo encontrado. Toque em 'Escanear' para procurar dispositivos próximos." 
-                       TextColor="#666" FontSize="14" HorizontalTextAlignment="Center" Margin="0,20" />
-            </StackLayout>
+                <VerticalStackLayout x:Name="EmptyStateSection" 
+                                     IsVisible="True" 
+                                     Spacing="20" 
+                                     Margin="0,40,0,0">
+                    <Label Text="📱" 
+                           FontSize="48" 
+                           HorizontalOptions="Center" 
+                           TextColor="#94A3B8"/>
+                    <Label Text="Nenhum dispositivo encontrado" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center" 
+                           TextColor="#64748B"/>
+                    <Label Text="Toque no botão de scan para procurar dispositivos Bluetooth próximos" 
+                           FontSize="14" 
+                           HorizontalOptions="Center" 
+                           HorizontalTextAlignment="Center" 
+                           TextColor="#94A3B8" 
+                           Margin="20,0"/>
+                </VerticalStackLayout>
+                
+            </VerticalStackLayout>
         </ScrollView>
     </Grid>
 </ContentPage>

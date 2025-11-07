@@ -4,7 +4,7 @@ using FMIAutomation.Services;
 
 namespace FMIAutomation.Views
 {
-    public partial class ChangePasswordPage : ContentPage
+    public partial class ChangePasswordPage : BaseContentPage
     {
         private readonly Services.IAuthService _authService;
         private string _userEmail = "";
@@ -16,11 +16,11 @@ namespace FMIAutomation.Views
             _authService = GetAuthService();
             
             // Configura eventos dos botões
-            ChangePasswordButton.Clicked += OnChangePasswordClicked;
-            CancelButton.Clicked += OnCancelClicked;
+            ChangePasswordButton.Clicked += (s, e) => { RegisterUserActivity(); OnChangePasswordClicked(s, e); };
+            CancelButton.Clicked += (s, e) => { RegisterUserActivity(); OnCancelClicked(s, e); };
             
             // Monitora força da senha
-            NewPasswordEntry.TextChanged += OnNewPasswordTextChanged;
+            NewPasswordEntry.TextChanged += (s, e) => { RegisterUserActivity(); OnNewPasswordTextChanged(s, e); };
             
             // Carrega email do usuário
             _ = LoadUserEmail();

@@ -5,11 +5,20 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"
              Title="Controle do Dispositivo">
     
+    <!-- Configuração específica da barra de navegação -->
+    <ContentPage.Resources>
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="#2563EB" />
+            <Setter Property="BarTextColor" Value="White" />
+            <Setter Property="IconColor" Value="White" />
+        </Style>
+    </ContentPage.Resources>
+    
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="20">
             
             <!-- Header do Dispositivo -->
-            <Frame BackgroundColor="#3B5A7A" 
+            <Frame BackgroundColor="#2563EB" 
                    CornerRadius="20" 
                    Padding="20" 
                    HasShadow="True"
@@ -29,39 +38,30 @@
                                    TextColor="White"/>
                             <HorizontalStackLayout Spacing="8">
                                 <Ellipse x:Name="StatusDot" 
-                                         Fill="#4CAF50" 
+                                         Fill="#10B981" 
                                          WidthRequest="10" 
                                          HeightRequest="10" 
                                          VerticalOptions="Center"/>
                                 <Label x:Name="StatusLabel" 
                                        Text="Online" 
                                        FontSize="14" 
-                                       TextColor="#E0E0E0"/>
+                                       TextColor="#E3F2FD"/>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                     
-                    <!-- Botões de Conexão -->
-                    <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
-                        <Button x:Name="ConnectButton" 
-                                Text="Conectar" 
-                                BackgroundColor="#4CAF50" 
-                                TextColor="White" 
-                                CornerRadius="25" 
-                                WidthRequest="120" 
-                                HeightRequest="50"
-                                FontSize="14"
-                                ImageSource="icon_power.png"/>
-                        <Button x:Name="DisconnectButton" 
-                                Text="Desconectar" 
-                                BackgroundColor="#F44336" 
-                                TextColor="White" 
-                                CornerRadius="25" 
-                                WidthRequest="120" 
-                                HeightRequest="50"
-                                FontSize="14"
-                                ImageSource="icon_power.png"/>
-                    </HorizontalStackLayout>
+                    <!-- Botão Único de Liga/Desliga -->
+                    <Button x:Name="PowerToggleButton" 
+                            Text="🔌 Desconectar Dispositivo" 
+                            BackgroundColor="#EF4444" 
+                            TextColor="White" 
+                            CornerRadius="30" 
+                            WidthRequest="250" 
+                            HeightRequest="60"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Shadow="{OnPlatform WinUI={x:Null}, Default={Shadow Brush=Black, Opacity=0.3, Radius=8, Offset='0,4'}}"/>
                     
                 </VerticalStackLayout>
             </Frame>
@@ -70,7 +70,7 @@
             <Label Text="🎛️ Controles da Granja" 
                    FontSize="20" 
                    FontAttributes="Bold" 
-                   TextColor="#3B5A7A" 
+                   TextColor="#2563EB" 
                    HorizontalOptions="Start"/>
             
             <!-- Card de Controle de Umidade -->

@@ -9,7 +9,7 @@
 
 
 
-    <TabBar Title="MenuPrincipal" Shell.TabBarBackgroundColor="White" Shell.TabBarForegroundColor="#3B5A7A" Shell.TabBarTitleColor="#3B5A7A" Shell.TabBarUnselectedColor="#718096">
+    <TabBar Title="MenuPrincipal" Shell.TabBarBackgroundColor="White" Shell.TabBarForegroundColor="#2563EB" Shell.TabBarTitleColor="#2563EB" Shell.TabBarUnselectedColor="#718096">
         <Tab Title="Home" Icon="icon_home.svg">
             <ShellContent
                 Title="Home"

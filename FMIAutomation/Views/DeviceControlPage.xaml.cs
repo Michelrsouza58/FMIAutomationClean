@@ -48,19 +48,27 @@ namespace FMIAutomation.Views
         
         private void UpdateConnectionStatus()
         {
-            if (StatusDot != null && StatusLabel != null)
+            if (StatusDot != null && StatusLabel != null && PowerToggleButton != null)
             {
                 if (IsOnline)
                 {
-                    StatusDot.Fill = Colors.Green;
+                    StatusDot.Fill = Color.FromArgb("#10B981");
                     StatusLabel.Text = "Online";
-                    StatusLabel.TextColor = Color.FromArgb("#4CAF50");
+                    StatusLabel.TextColor = Color.FromArgb("#10B981");
+                    
+                    // Botão para desconectar
+                    PowerToggleButton.Text = "🔌 Desconectar Dispositivo";
+                    PowerToggleButton.BackgroundColor = Color.FromArgb("#EF4444");
                 }
                 else
                 {
                     StatusDot.Fill = Colors.Gray;
                     StatusLabel.Text = "Offline";
                     StatusLabel.TextColor = Colors.Gray;
+                    
+                    // Botão para conectar
+                    PowerToggleButton.Text = "⚡ Conectar Dispositivo";
+                    PowerToggleButton.BackgroundColor = Color.FromArgb("#10B981");
                 }
             }
             
@@ -117,16 +125,27 @@ namespace FMIAutomation.Views
         
         private void SetupButtonEvents()
         {
-            ConnectButton.Clicked += async (s, e) => await OnConnectClicked();
-            DisconnectButton.Clicked += async (s, e) => await OnDisconnectClicked();
+            PowerToggleButton.Clicked += async (s, e) => await OnPowerToggleClicked();
             ApplyConfigButton.Clicked += async (s, e) => await OnApplyConfigClicked();
         }
         
-        private async Task OnConnectClicked()
+        private async Task OnPowerToggleClicked()
+        {
+            if (IsOnline)
+            {
+                await DisconnectDevice();
+            }
+            else
+            {
+                await ConnectDevice();
+            }
+        }
+
+        private async Task ConnectDevice()
         {
             // Simular processo de conexão
-            ConnectButton.IsEnabled = false;
-            ConnectButton.Text = "Conectando...";
+            PowerToggleButton.IsEnabled = false;
+            PowerToggleButton.Text = "🔄 Conectando...";
             
             try
             {
@@ -149,34 +168,32 @@ namespace FMIAutomation.Views
             }
             finally
             {
-                ConnectButton.Text = "Conectar";
-                ConnectButton.IsEnabled = true;
+                PowerToggleButton.IsEnabled = true;
             }
         }
         
-        private async Task OnDisconnectClicked()
+        private async Task DisconnectDevice()
         {
             var result = await DisplayAlert("⚠️ Confirmação", 
                 $"Deseja realmente desconectar do {DeviceName}?", 
-                "Sim", "Não");
-            
+                "Sim", "Cancelar");
+                
             if (result)
             {
-                DisconnectButton.IsEnabled = false;
-                DisconnectButton.Text = "Desconectando...";
+                PowerToggleButton.IsEnabled = false;
+                PowerToggleButton.Text = "🔄 Desconectando...";
                 
                 try
                 {
-                    // Simular processo de desconexão
-                    await Task.Delay(1500);
+                    // Simular delay de desconexão
+                    await Task.Delay(1000);
                     
                     IsOnline = false;
                     await DisplayAlert("ℹ️ Desconectado", $"Desconectado do {DeviceName}.", "OK");
                 }
                 finally
                 {
-                    DisconnectButton.Text = "Desconectar";
-                    DisconnectButton.IsEnabled = true;
+                    PowerToggleButton.IsEnabled = true;
                 }
             }
         }

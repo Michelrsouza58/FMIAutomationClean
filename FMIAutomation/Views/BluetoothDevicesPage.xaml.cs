@@ -1,29 +1,23 @@
 using Microsoft.Maui.Controls;
 using FMIAutomation.Services;
-using FMIAutomation.ViewModels;
 
 namespace FMIAutomation.Views
 {
     public partial class BluetoothDevicesPage : ContentPage
     {
-        private readonly IBluetoothService _bluetoothService;
-        private readonly IPermissionService _permissionService;
-        private BluetoothDevicesViewModel _viewModel;
-        
-        public BluetoothDevicesPage(IBluetoothService bluetoothService, IPermissionService permissionService)
+        public BluetoothDevicesPage()
         {
             InitializeComponent();
+            var vm = new ViewModels.BluetoothDevicesViewModel();
+            this.BindingContext = vm;
             
-            _bluetoothService = bluetoothService;
-            _permissionService = permissionService;
-            _viewModel = new BluetoothDevicesViewModel(_bluetoothService, _permissionService);
-            this.BindingContext = _viewModel;
-            
-            // Configurar eventos
-            AddDeviceBtn.Clicked += (s, e) => ShowScanModal();
+            // Configurar eventos dos botões
+            ScanDevicesBtn.Clicked += async (s, e) => await StartBluetoothScan();
             
             // Inscrever-se para mudanças de tema
             ThemeService.ThemeChanged += OnThemeChanged;
+            
+            LoadMockDevices();
         }
 
         private void OnThemeChanged(object? sender, ThemeService.AppTheme newTheme)
@@ -42,29 +36,65 @@ namespace FMIAutomation.Views
             ThemeService.ThemeChanged -= OnThemeChanged;
         }
 
-        private void ShowScanModal()
+        private async Task StartBluetoothScan()
         {
-            var modal = new BluetoothScanModal();
-            // Mock: adicionar dispositivos encontrados
-            modal.ScanResults.Add(new Models.BluetoothDevice { Name = "Novo Fone", Address = "33:44:55:66:77:88", IsPaired = false });
-            modal.ScanResults.Add(new Models.BluetoothDevice { Name = "Caixa Portátil", Address = "44:55:66:77:88:99", IsPaired = false });
-
-            // Overlay modal
-            if (this.Content is Layout main)
+            try
             {
-                mainLayout = main;
-                var overlay = new Grid();
-                overlay.Children.Add(main);
-                overlay.Children.Add(modal);
-                this.Content = overlay;
+                // Mostrar indicador de scan
+                ScanStatusFrame.IsVisible = true;
+                ScanIndicator.IsRunning = true;
+                ScanStatusLabel.Text = "Procurando dispositivos Bluetooth...";
+                EmptyStateSection.IsVisible = false;
 
-                modal.Closed += (s, e) =>
+                // Simular scan (substituir por implementação real)
+                await Task.Delay(3000);
+
+                // Mock de dispositivos encontrados
+                var foundDevices = new List<Models.BluetoothDevice>
                 {
-                    overlay.Children.Remove(modal);
+                    new Models.BluetoothDevice { Name = "Fone JBL", Address = "00:11:22:33:44:55", IsPaired = false },
+                    new Models.BluetoothDevice { Name = "Caixa Sony", Address = "11:22:33:44:55:66", IsPaired = false },
+                    new Models.BluetoothDevice { Name = "Mouse BT", Address = "22:33:44:55:66:77", IsPaired = false }
                 };
+
+                // Atualizar UI com dispositivos encontrados
+                AvailableDevicesCollection.ItemsSource = foundDevices;
+                
+                // Esconder indicador de scan
+                ScanIndicator.IsRunning = false;
+                ScanStatusLabel.Text = $"Encontrados {foundDevices.Count} dispositivos";
+                
+                await Task.Delay(2000);
+                ScanStatusFrame.IsVisible = false;
+                
+                if (!foundDevices.Any())
+                {
+                    EmptyStateSection.IsVisible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ScanIndicator.IsRunning = false;
+                ScanStatusLabel.Text = $"Erro no scan: {ex.Message}";
+                await DisplayAlert("Erro", $"Falha ao escanear dispositivos: {ex.Message}", "OK");
             }
         }
 
-    private Layout? mainLayout;
+        private void LoadMockDevices()
+        {
+            // Dispositivos conectados (mock)
+            var connectedDevices = new List<Models.BluetoothDevice>
+            {
+                new Models.BluetoothDevice { Name = "Dispositivo ESP32", Address = "AA:BB:CC:DD:EE:FF", IsPaired = true }
+            };
+            
+            ConnectedDevicesCollection.ItemsSource = connectedDevices;
+            
+            // Se não há dispositivos, mostrar estado vazio
+            if (!connectedDevices.Any())
+            {
+                EmptyStateSection.IsVisible = true;
+            }
+        }
     }
 }

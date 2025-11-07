@@ -1,4 +1,6 @@
 ﻿using FMIAutomation.Views;
+using FMIAutomation.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FMIAutomation;
 
@@ -37,13 +39,29 @@ public partial class AppShell : Shell
 			   
 		   if (result)
 		   {
-			   // Limpar dados de sessão
+			   // Finalizar sessão usando o SessionService
 			   try 
-			   { 
-				   Microsoft.Maui.Storage.SecureStorage.Remove("login_time");
-				   Microsoft.Maui.Storage.SecureStorage.Remove("user_email");
+			   {
+				   var services = Handler?.MauiContext?.Services ?? Application.Current?.Handler?.MauiContext?.Services;
+				   var sessionService = services?.GetService<ISessionService>();
+				   
+				   if (sessionService != null)
+				   {
+					   await sessionService.EndSessionAsync();
+					   System.Diagnostics.Debug.WriteLine("[AppShell] Sessão finalizada via SessionService");
+				   }
+				   else
+				   {
+					   // Fallback: limpar manualmente
+					   Microsoft.Maui.Storage.SecureStorage.Remove("login_time");
+					   Microsoft.Maui.Storage.SecureStorage.Remove("user_email");
+					   System.Diagnostics.Debug.WriteLine("[AppShell] Sessão finalizada manualmente (fallback)");
+				   }
 			   } 
-			   catch { }
+			   catch (Exception ex)
+			   {
+				   System.Diagnostics.Debug.WriteLine($"[AppShell] Erro ao finalizar sessão: {ex.Message}");
+			   }
 			   
 			   // Voltar para a tela de login
 			   Application.Current!.MainPage = new MainPage(

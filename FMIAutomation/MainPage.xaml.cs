@@ -1,5 +1,6 @@
 ﻿using FMIAutomation.Services;
 using Microsoft.Maui.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -12,19 +13,18 @@ namespace FMIAutomation
 
         public MainPage(IAuthService authService)
         {
-            _authService = authService;
-            InitializeComponent();
-            
-            // Inicializar tema
-            _ = InitializeThemeAsync();
-            
-            SetupToggle();
-            EntrarBtn.Clicked += EntrarBtn_Clicked;
-        }
-
-        private async Task InitializeThemeAsync()
-        {
-            await ThemeService.InitializeAsync();
+            try
+            {
+                _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+                InitializeComponent();
+                SetupToggle();
+                EntrarBtn.Clicked += EntrarBtn_Clicked;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainPage] Erro na inicialização: {ex.Message}");
+                throw; // Re-throw para que o erro seja visível
+            }
         }		private async void EntrarBtn_Clicked(object? sender, EventArgs e)
 		{
 			if (isCadastro)
@@ -136,6 +136,9 @@ namespace FMIAutomation
 					
 					System.Diagnostics.Debug.WriteLine($"[LOGIN] Email salvo no SecureStorage: '{email}'");
 					
+					// Inicia o controle de sessão
+					await StartUserSessionAsync();
+					
 					if (Application.Current != null)
 					{
 						Application.Current.MainPage = new AppShell();
@@ -206,6 +209,32 @@ namespace FMIAutomation
 			// Limpar campos
 			EmailEntry.Text = string.Empty;
 			SenhaEntry.Text = string.Empty;
+		}
+
+		private async Task StartUserSessionAsync()
+		{
+			try
+			{
+				// Não bloqueia o login se o SessionService não estiver disponível
+				await Task.Delay(50); // Pequeno delay para permitir inicialização
+				
+				var services = Handler?.MauiContext?.Services ?? Application.Current?.Handler?.MauiContext?.Services;
+				var sessionService = services?.GetService<ISessionService>();
+				
+				if (sessionService != null)
+				{
+					await sessionService.StartSessionAsync();
+					System.Diagnostics.Debug.WriteLine("[MainPage] Sessão de usuário iniciada com sucesso");
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine("[MainPage] SessionService não encontrado - continuando sem sessão");
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"[MainPage] Erro ao iniciar sessão (não crítico): {ex.Message}");
+			}
 		}
 	}
 }

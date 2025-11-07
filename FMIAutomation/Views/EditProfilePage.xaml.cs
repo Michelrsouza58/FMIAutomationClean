@@ -4,7 +4,7 @@ using FMIAutomation.Services;
 
 namespace FMIAutomation.Views
 {
-    public partial class EditProfilePage : ContentPage
+    public partial class EditProfilePage : BaseContentPage
     {
         private readonly Services.IAuthService _authService;
         private string _userEmail = "";
@@ -16,8 +16,8 @@ namespace FMIAutomation.Views
             _authService = GetAuthService();
             
             // Configura eventos dos botões
-            SaveButton.Clicked += OnSaveClicked;
-            CancelButton.Clicked += OnCancelClicked;
+            SaveButton.Clicked += (s, e) => { RegisterUserActivity(); OnSaveClicked(s, e); };
+            CancelButton.Clicked += (s, e) => { RegisterUserActivity(); OnCancelClicked(s, e); };
             
             // Carrega dados do usuário
             _ = LoadUserData();

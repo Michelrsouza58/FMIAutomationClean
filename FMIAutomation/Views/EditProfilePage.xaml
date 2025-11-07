@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<views:BaseContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:FMIAutomation.Views"
              x:Class="FMIAutomation.Views.EditProfilePage"
              BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"
              Title="Editar Perfil">
@@ -9,11 +10,20 @@
         <BackButtonBehavior IconOverride="arrow_back.png" TextOverride="" />
     </Shell.BackButtonBehavior>
     
+    <!-- Configuração específica da barra de navegação -->
+    <ContentPage.Resources>
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="#2563EB" />
+            <Setter Property="BarTextColor" Value="White" />
+            <Setter Property="IconColor" Value="White" />
+        </Style>
+    </ContentPage.Resources>
+    
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
             
             <!-- Header -->
-            <Frame BackgroundColor="#3B5A7A" CornerRadius="25" Padding="25" HasShadow="True" Margin="0,10,0,20">
+            <Frame BackgroundColor="#2563EB" CornerRadius="25" Padding="25" HasShadow="True" Margin="0,10,0,20">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="✏️" FontSize="48" HorizontalOptions="Center" TextColor="White"/>
                     <Label Text="Editar Perfil" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
@@ -27,44 +37,53 @@
                 <!-- Nome -->
                 <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Nome Completo" FontSize="16" FontAttributes="Bold" TextColor="#3B5A7A"/>
-                        <Entry x:Name="NameEntry" 
-                               Text=""
-                               FontSize="18" 
-                               BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#2D3748}" 
-                               TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"
-                               Placeholder="Digite seu nome completo"/>
+                        <Label Text="Nome Completo" FontSize="16" FontAttributes="Bold" TextColor="#2563EB"/>
+                        <Border BackgroundColor="#F1F5F9" StrokeThickness="2" Stroke="#E2E8F0" StrokeShape="RoundRectangle 12">
+                            <Entry x:Name="NameEntry" 
+                                   Text=""
+                                   FontSize="18" 
+                                   BackgroundColor="Transparent"
+                                   TextColor="#1E293B"
+                                   PlaceholderColor="#94A3B8"
+                                   Placeholder="Digite seu nome completo"
+                                   Margin="15,10"/>
+                        </Border>
                     </VerticalStackLayout>
                 </Frame>
                 
                 <!-- Email -->
                 <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Email" FontSize="16" FontAttributes="Bold" TextColor="#3B5A7A"/>
-                        <Entry x:Name="EmailEntry" 
-                               Text=""
-                               FontSize="18" 
-                               BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#2D3748}" 
-                               TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"
-                               Keyboard="Email"
-                               Placeholder="Digite seu email"/>
+                        <Label Text="Email" FontSize="16" FontAttributes="Bold" TextColor="#2563EB"/>
+                        <Border BackgroundColor="#F1F5F9" StrokeThickness="2" Stroke="#E2E8F0" StrokeShape="RoundRectangle 12">
+                            <Entry x:Name="EmailEntry" 
+                                   Text=""
+                                   FontSize="18" 
+                                   BackgroundColor="Transparent"
+                                   TextColor="#1E293B"
+                                   PlaceholderColor="#94A3B8"
+                                   Keyboard="Email"
+                                   Placeholder="Digite seu email"
+                                   Margin="15,10"/>
+                        </Border>
                     </VerticalStackLayout>
                 </Frame>
                 
                 <!-- Telefone -->
                 <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Telefone" FontSize="16" FontAttributes="Bold" TextColor="#3B5A7A"/>
-                        <Entry x:Name="PhoneEntry" 
-                               Text=""
-                               FontSize="18" 
-                               BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#2D3748}" 
-                               TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"
-                               Keyboard="Telephone"
-                               Placeholder="Digite seu telefone"/>
+                        <Label Text="Telefone" FontSize="16" FontAttributes="Bold" TextColor="#2563EB"/>
+                        <Border BackgroundColor="#F1F5F9" StrokeThickness="2" Stroke="#E2E8F0" StrokeShape="RoundRectangle 12">
+                            <Entry x:Name="PhoneEntry" 
+                                   Text=""
+                                   FontSize="18" 
+                                   BackgroundColor="Transparent"
+                                   TextColor="#1E293B"
+                                   PlaceholderColor="#94A3B8"
+                                   Keyboard="Telephone"
+                                   Placeholder="Digite seu telefone"
+                                   Margin="15,10"/>
+                        </Border>
                     </VerticalStackLayout>
                 </Frame>
                 
@@ -74,18 +93,19 @@
                             Text="💾  Salvar Alterações" 
                             FontSize="18" 
                             FontAttributes="Bold"
-                            BackgroundColor="#3B5A7A" 
+                            BackgroundColor="#2563EB" 
                             TextColor="White" 
                             CornerRadius="25" 
                             HeightRequest="55"
-                            HorizontalOptions="Fill"/>
+                            HorizontalOptions="Fill"
+                            Shadow="{OnPlatform WinUI={x:Null}, Default={Shadow Brush=Black, Opacity=0.3, Radius=8, Offset='0,4'}}"/>
                     
                     <Button x:Name="CancelButton" 
                             Text="❌  Cancelar" 
                             FontSize="16" 
                             FontAttributes="Bold"
                             BackgroundColor="Transparent" 
-                            TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
+                            TextColor="#64748B" 
                             CornerRadius="25" 
                             HeightRequest="50"
                             BorderWidth="2"
@@ -96,4 +116,4 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-</ContentPage>
+</views:BaseContentPage>
