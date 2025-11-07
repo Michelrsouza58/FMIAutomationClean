@@ -37,6 +37,9 @@ namespace FMIAutomation.Services
                         ApplyTheme(theme);
                         // Notificar após aplicar o tema
                         ThemeChanged?.Invoke(null, theme);
+                        
+                        // Forçar atualização de todas as páginas abertas
+                        RefreshAllPages();
                     }
                     catch (Exception ex)
                     {
@@ -54,58 +57,119 @@ namespace FMIAutomation.Services
         {
             try
             {
-                if (Application.Current?.Resources == null) return;
+                if (Application.Current == null) return;
+                
+                // Usar o sistema nativo do MAUI para alternar temas
+                var mauiTheme = theme == AppTheme.Light ? 
+                    Microsoft.Maui.ApplicationModel.AppTheme.Light : 
+                    Microsoft.Maui.ApplicationModel.AppTheme.Dark;
 
-                var resources = Application.Current.Resources;
+                Application.Current.UserAppTheme = mauiTheme;
+                
+                System.Diagnostics.Debug.WriteLine($"[ThemeService] Tema aplicado: {theme}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao aplicar tema: {ex.Message}");
+            }
+        }
 
-                // Definir cores seguramente
-                var colors = theme == AppTheme.Light ? 
-                    new Dictionary<string, Color>
-                    {
-                        ["BackgroundColor"] = Color.FromArgb("#F8FAFC"),
-                        ["CardColor"] = Color.FromArgb("#FFFFFF"),
-                        ["TextColor"] = Color.FromArgb("#111827"),
-                        ["SecondaryTextColor"] = Color.FromArgb("#4B5563"),
-                        ["AccentColor"] = Color.FromArgb("#1D4ED8"),
-                        ["DangerColor"] = Color.FromArgb("#DC2626"),
-                        ["BorderColor"] = Color.FromArgb("#D1D5DB"),
-                        ["LoginBackgroundColor"] = Color.FromArgb("#F3F4F6")
-                    } :
-                    new Dictionary<string, Color>
-                    {
-                        ["BackgroundColor"] = Color.FromArgb("#1F2937"),
-                        ["CardColor"] = Color.FromArgb("#374151"),
-                        ["TextColor"] = Color.FromArgb("#F9FAFB"),
-                        ["SecondaryTextColor"] = Color.FromArgb("#D1D5DB"),
-                        ["AccentColor"] = Color.FromArgb("#60A5FA"),
-                        ["DangerColor"] = Color.FromArgb("#F87171"),
-                        ["BorderColor"] = Color.FromArgb("#4B5563"),
-                        ["LoginBackgroundColor"] = Color.FromArgb("#1F2937")
-                    };
+        private static void RefreshAllPages()
+        {
+            try
+            {
+                if (Application.Current?.MainPage == null) return;
 
-                // Aplicar cores de forma segura
-                foreach (var color in colors)
+                // Forçar refresh da página principal
+                var mainPage = Application.Current.MainPage;
+                
+                if (mainPage is Shell shell)
                 {
-                    try
+                    // Atualizar todas as páginas do Shell
+                    RefreshShellPages(shell);
+                }
+                else if (mainPage is NavigationPage navPage)
+                {
+                    // Atualizar páginas de navegação
+                    foreach (var page in navPage.Navigation.NavigationStack)
                     {
-                        if (resources.ContainsKey(color.Key))
-                        {
-                            resources[color.Key] = color.Value;
-                        }
-                        else
-                        {
-                            resources.Add(color.Key, color.Value);
-                        }
+                        RefreshPageElements(page);
                     }
-                    catch (Exception ex)
+                }
+                else
+                {
+                    RefreshPageElements(mainPage);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar páginas: {ex.Message}");
+            }
+        }
+
+        private static void RefreshShellPages(Shell shell)
+        {
+            try
+            {
+                if (shell.CurrentPage != null)
+                {
+                    RefreshPageElements(shell.CurrentPage);
+                }
+                
+                // Forçar re-render do Shell
+                shell.BatchBegin();
+                shell.BatchCommit();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar Shell: {ex.Message}");
+            }
+        }
+
+        private static void RefreshPageElements(Page page)
+        {
+            try
+            {
+                if (page == null) return;
+
+                // Forçar re-render da página
+                page.BatchBegin();
+                page.BatchCommit();
+
+                // Se for ContentPage, atualizar o conteúdo
+                if (page is ContentPage contentPage && contentPage.Content != null)
+                {
+                    RefreshViewElements(contentPage.Content);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar página {page?.GetType().Name}: {ex.Message}");
+            }
+        }
+
+        private static void RefreshViewElements(View view)
+        {
+            try
+            {
+                if (view == null) return;
+
+                // Forçar re-render do elemento
+                view.BatchBegin();
+                view.BatchCommit();
+
+                // Se for um layout, atualizar filhos recursivamente
+                if (view is Layout layout)
+                {
+                    foreach (var child in layout.Children.OfType<View>())
                     {
-                        System.Diagnostics.Debug.WriteLine($"Erro ao definir cor {color.Key}: {ex.Message}");
+                        RefreshViewElements(child);
                     }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erro ao aplicar tema: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar elemento {view?.GetType().Name}: {ex.Message}");
             }
         }
 

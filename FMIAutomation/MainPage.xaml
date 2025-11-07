@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.MainPage">
 
-    <ScrollView BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
-        <VerticalStackLayout Padding="30,0" Spacing="20" BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}">
+    <ScrollView BackgroundColor="{AppThemeBinding Light={StaticResource AppBackgroundLight}, Dark={StaticResource AppBackgroundDark}}">
+        <VerticalStackLayout Padding="30,0" Spacing="20" BackgroundColor="{AppThemeBinding Light={StaticResource AppBackgroundLight}, Dark={StaticResource AppBackgroundDark}}">
             <Frame Padding="0" IsClippedToBounds="True" CornerRadius="80" HeightRequest="160" WidthRequest="160" HasShadow="False" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0,40,0,10">
                 <Image Source="logo_fmi.png" HeightRequest="160" WidthRequest="160" Aspect="AspectFill" />
             </Frame>
@@ -25,27 +25,23 @@
             </Grid>
 
             <!-- Campo Nome (apenas no cadastro) -->
-            <Entry x:Name="NomeEntry" Placeholder="Nome completo" BackgroundColor="Transparent" 
-                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
-                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+            <Entry x:Name="NomeEntry" Placeholder="Nome completo" 
+                   Style="{StaticResource AppEntryStyle}"
                    HeightRequest="48" IsVisible="False"/>
 
             <!-- Campo Email -->
-            <Entry x:Name="EmailEntry" Placeholder="E-mail" BackgroundColor="Transparent" 
-                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
-                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+            <Entry x:Name="EmailEntry" Placeholder="E-mail" 
+                   Style="{StaticResource AppEntryStyle}"
                    Margin="0,0,0,5" HeightRequest="48"/>
 
             <!-- Campo Confirmar Email (apenas no cadastro) -->
-            <Entry x:Name="ConfirmarEmailEntry" Placeholder="Confirmar e-mail" BackgroundColor="Transparent" 
-                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
-                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+            <Entry x:Name="ConfirmarEmailEntry" Placeholder="Confirmar e-mail" 
+                   Style="{StaticResource AppEntryStyle}"
                    Margin="0,0,0,5" HeightRequest="48" IsVisible="False"/>
 
             <!-- Campo Telefone (apenas no cadastro) -->
-            <Entry x:Name="TelefoneEntry" Placeholder="Telefone (opcional)" BackgroundColor="Transparent" 
-                   TextColor="{AppThemeBinding Light={StaticResource LoginTextLight}, Dark={StaticResource LoginTextDark}}" 
-                   PlaceholderColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}" 
+            <Entry x:Name="TelefoneEntry" Placeholder="Telefone (opcional)" 
+                   Style="{StaticResource AppEntryStyle}"
                    Keyboard="Telephone" HeightRequest="48" IsVisible="False"/>
 
             <!-- Campo Senha -->

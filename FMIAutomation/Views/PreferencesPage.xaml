@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FMIAutomation.Views.PreferencesPage"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LoginBackgroundLight}, Dark={StaticResource LoginBackgroundDark}}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppBackgroundLight}, Dark={StaticResource AppBackgroundDark}}"
              Title="Preferências">
     
     <Shell.BackButtonBehavior>
@@ -31,10 +31,11 @@
             </Frame>
             
             <!-- Seção Aparência -->
-            <Label Text="🎨 Aparência" FontSize="20" FontAttributes="Bold" TextColor="#3B5A7A" Margin="0,10,0,5"/>
+            <Label Text="🎨 Aparência" FontSize="20" FontAttributes="Bold" 
+                   Style="{StaticResource AppLabelStyle}" Margin="0,10,0,5"/>
             
             <!-- Tema -->
-            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+            <Frame Style="{StaticResource AppFrameStyle}" Padding="20">
                 <Grid ColumnSpacing="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -51,19 +52,23 @@
                     </Border>
                     
                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label Text="Tema Escuro" FontSize="18" FontAttributes="Bold" TextColor="#3B5A7A"/>
-                        <Label Text="Ativar modo escuro" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource LoginPlaceholderLight}, Dark={StaticResource LoginPlaceholderDark}}"/>
+                        <Label Text="Tema Escuro" FontSize="18" FontAttributes="Bold" 
+                               Style="{StaticResource AppLabelStyle}"/>
+                        <Label Text="Ativar modo escuro para reduzir cansaço visual" FontSize="14" 
+                               Style="{StaticResource AppSecondaryLabelStyle}"/>
                     </VerticalStackLayout>
                     
-                    <Switch x:Name="DarkModeSwitch" Grid.Column="2" VerticalOptions="Center" OnColor="#3B5A7A"/>
+                    <Switch x:Name="DarkModeSwitch" Grid.Column="2" VerticalOptions="Center" 
+                            OnColor="{AppThemeBinding Light={StaticResource AppAccentLight}, Dark={StaticResource AppAccentDark}}"/>
                 </Grid>
             </Frame>
             
             <!-- Seção Notificações -->
-            <Label Text="🔔 Notificações" FontSize="20" FontAttributes="Bold" TextColor="#3B5A7A" Margin="0,30,0,5"/>
+            <Label Text="🔔 Notificações" FontSize="20" FontAttributes="Bold" 
+                   Style="{StaticResource AppLabelStyle}" Margin="0,30,0,5"/>
             
             <!-- Notificações Push -->
-            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+            <Frame Style="{StaticResource AppFrameStyle}" Padding="20">
                 <Grid ColumnSpacing="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -89,7 +94,7 @@
             </Frame>
             
             <!-- Notificações por Email -->
-            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+            <Frame Style="{StaticResource AppFrameStyle}" Padding="20">
                 <Grid ColumnSpacing="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -115,10 +120,11 @@
             </Frame>
             
             <!-- Seção Idioma -->
-            <Label Text="🌐 Idioma e Região" FontSize="20" FontAttributes="Bold" TextColor="#3B5A7A" Margin="0,30,0,5"/>
+            <Label Text="🌐 Idioma e Região" FontSize="20" FontAttributes="Bold" 
+                   Style="{StaticResource AppLabelStyle}" Margin="0,30,0,5"/>
             
             <!-- Seleção de Idioma -->
-            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+            <Frame Style="{StaticResource AppFrameStyle}" Padding="20">
                 <Grid ColumnSpacing="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -147,10 +153,11 @@
             </Frame>
             
             <!-- Seção Privacidade -->
-            <Label Text="🔒 Privacidade e Segurança" FontSize="20" FontAttributes="Bold" TextColor="#3B5A7A" Margin="0,30,0,5"/>
+            <Label Text="🔒 Privacidade e Segurança" FontSize="20" FontAttributes="Bold" 
+                   Style="{StaticResource AppLabelStyle}" Margin="0,30,0,5"/>
             
             <!-- Analytics -->
-            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+            <Frame Style="{StaticResource AppFrameStyle}" Padding="20">
                 <Grid ColumnSpacing="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -179,9 +186,7 @@
             <Button x:Name="SavePreferencesButton" 
                     Text="💾  Salvar Preferências" 
                     FontSize="18" 
-                    FontAttributes="Bold"
-                    BackgroundColor="#3B5A7A" 
-                    TextColor="White" 
+                    Style="{StaticResource AppButtonStyle}"
                     CornerRadius="25" 
                     HeightRequest="55"
                     Margin="0,30,0,20"

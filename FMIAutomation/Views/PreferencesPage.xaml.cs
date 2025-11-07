@@ -1,4 +1,5 @@
 using Microsoft.Maui.Controls;
+using FMIAutomation.Services;
 
 namespace FMIAutomation.Views
 {
@@ -10,17 +11,21 @@ namespace FMIAutomation.Views
             
             // Configura eventos
             SavePreferencesButton.Clicked += OnSavePreferencesClicked;
+            DarkModeSwitch.Toggled += OnDarkModeToggled;
             
             // Carrega preferências salvas
             LoadPreferences();
         }
 
-        private void LoadPreferences()
+        private async void LoadPreferences()
         {
             try
             {
-                // Carrega preferências do armazenamento local
-                DarkModeSwitch.IsToggled = Preferences.Get("DarkMode", false);
+                // Carrega tema atual
+                var currentTheme = await ThemeService.GetCurrentThemeAsync();
+                DarkModeSwitch.IsToggled = currentTheme == ThemeService.AppTheme.Dark;
+                
+                // Carrega outras preferências
                 PushNotificationsSwitch.IsToggled = Preferences.Get("PushNotifications", true);
                 EmailNotificationsSwitch.IsToggled = Preferences.Get("EmailNotifications", false);
                 AnalyticsSwitch.IsToggled = Preferences.Get("Analytics", false);
@@ -31,6 +36,24 @@ namespace FMIAutomation.Views
             }
         }
 
+        private async void OnDarkModeToggled(object? sender, ToggledEventArgs e)
+        {
+            try
+            {
+                // Aplica o tema imediatamente
+                var theme = e.Value ? ThemeService.AppTheme.Dark : ThemeService.AppTheme.Light;
+                await ThemeService.SetThemeAsync(theme);
+                
+                // Feedback visual
+                var message = e.Value ? "Tema escuro ativado! 🌙" : "Tema claro ativado! ☀️";
+                await DisplayAlert("Tema Alterado", message, "OK");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[PreferencesPage] Erro ao alterar tema: {ex.Message}");
+            }
+        }
+
         private async void OnSavePreferencesClicked(object sender, EventArgs e)
         {
             try
@@ -38,26 +61,19 @@ namespace FMIAutomation.Views
                 SavePreferencesButton.IsEnabled = false;
                 SavePreferencesButton.Text = "💾  Salvando...";
 
-                // Salva preferências no armazenamento local
-                Preferences.Set("DarkMode", DarkModeSwitch.IsToggled);
+                // Salva outras preferências (tema já é salvo automaticamente)
                 Preferences.Set("PushNotifications", PushNotificationsSwitch.IsToggled);
                 Preferences.Set("EmailNotifications", EmailNotificationsSwitch.IsToggled);
                 Preferences.Set("Analytics", AnalyticsSwitch.IsToggled);
 
                 // Simula processamento
-                await Task.Delay(1000);
+                await Task.Delay(800);
                 
-                await DisplayAlert("Sucesso", "Preferências salvas com sucesso!", "OK");
-                
-                // Aplica tema se necessário
-                if (DarkModeSwitch.IsToggled)
-                {
-                    await DisplayAlert("Tema", "O tema escuro será aplicado na próxima abertura do app.", "OK");
-                }
+                await DisplayAlert("✅ Sucesso", "Todas as preferências foram salvas com sucesso!", "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", $"Erro ao salvar preferências: {ex.Message}", "OK");
+                await DisplayAlert("❌ Erro", $"Erro ao salvar preferências: {ex.Message}", "OK");
             }
             finally
             {

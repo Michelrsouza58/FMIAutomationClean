@@ -437,4 +437,81 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
+    <!-- ========================================== -->
+    <!-- TEMA PERSONALIZADO - CORES DINÂMICAS -->
+    <!-- ========================================== -->
+    
+    <!-- Cores do Tema Claro -->
+    <Color x:Key="AppBackgroundLight">#F8FAFC</Color>
+    <Color x:Key="AppCardLight">#FFFFFF</Color>
+    <Color x:Key="AppTextLight">#111827</Color>
+    <Color x:Key="AppSecondaryTextLight">#4B5563</Color>
+    <Color x:Key="AppAccentLight">#2563EB</Color>
+    <Color x:Key="AppDangerLight">#DC2626</Color>
+    <Color x:Key="AppSuccessLight">#059669</Color>
+    <Color x:Key="AppWarningLight">#D97706</Color>
+    <Color x:Key="AppBorderLight">#E5E7EB</Color>
+    <Color x:Key="AppSurfaceLight">#F3F4F6</Color>
+    <Color x:Key="AppInputLight">#FFFFFF</Color>
+    <Color x:Key="AppPlaceholderLight">#9CA3AF</Color>
+
+    <!-- Cores do Tema Escuro -->
+    <Color x:Key="AppBackgroundDark">#0F172A</Color>
+    <Color x:Key="AppCardDark">#1E293B</Color>
+    <Color x:Key="AppTextDark">#F8FAFC</Color>
+    <Color x:Key="AppSecondaryTextDark">#CBD5E1</Color>
+    <Color x:Key="AppAccentDark">#3B82F6</Color>
+    <Color x:Key="AppDangerDark">#EF4444</Color>
+    <Color x:Key="AppSuccessDark">#10B981</Color>
+    <Color x:Key="AppWarningDark">#F59E0B</Color>
+    <Color x:Key="AppBorderDark">#334155</Color>
+    <Color x:Key="AppSurfaceDark">#334155</Color>
+    <Color x:Key="AppInputDark">#475569</Color>
+    <Color x:Key="AppPlaceholderDark">#64748B</Color>
+
+    <!-- Estilos Globais com Tema Dinâmico -->
+    <Style x:Key="AppFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppCardLight}, Dark={StaticResource AppCardDark}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource AppBorderLight}, Dark={StaticResource AppBorderDark}}" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style x:Key="AppLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="AppSecondaryLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppSecondaryTextLight}, Dark={StaticResource AppSecondaryTextDark}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="AppEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppInputLight}, Dark={StaticResource AppInputDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource AppPlaceholderLight}, Dark={StaticResource AppPlaceholderDark}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="AppButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppAccentLight}, Dark={StaticResource AppAccentDark}}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="48" />
+    </Style>
+
+    <Style x:Key="AppSecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource AppBorderLight}, Dark={StaticResource AppBorderDark}}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="48" />
+    </Style>
+
 </ResourceDictionary>

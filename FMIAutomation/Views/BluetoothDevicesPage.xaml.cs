@@ -8,7 +8,11 @@ namespace FMIAutomation.Views
         public BluetoothDevicesPage()
         {
             InitializeComponent();
-            var vm = new ViewModels.BluetoothDevicesViewModel();
+            
+            // Criar instâncias dos serviços para o ViewModel
+            var permissionService = new PermissionService();
+            var bluetoothService = new BluetoothService(permissionService);
+            var vm = new ViewModels.BluetoothDevicesViewModel(bluetoothService, permissionService);
             this.BindingContext = vm;
             
             // Configurar eventos dos botões
