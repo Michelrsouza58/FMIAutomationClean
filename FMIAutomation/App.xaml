@@ -2,6 +2,7 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FMIAutomation"
+             xmlns:converter="clr-namespace:FMIAutomation.Converter"
              x:Class="FMIAutomation.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -9,6 +10,11 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Conversores para Bluetooth -->
+            <converter:CountToBooleanConverter x:Key="CountToBooleanConverter" />
+            <converter:BoolToTextConverter x:Key="BoolToTextConverter" />
+            <converter:BoolToColorConverter x:Key="BoolToColorConverter" />
             
             <!-- Cores Dinâmicas do Tema serão definidas pelo ThemeService -->
         </ResourceDictionary>

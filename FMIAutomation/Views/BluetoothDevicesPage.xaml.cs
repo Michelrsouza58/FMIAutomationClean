@@ -1,16 +1,25 @@
 using Microsoft.Maui.Controls;
 using FMIAutomation.Services;
+using FMIAutomation.ViewModels;
 
 namespace FMIAutomation.Views
 {
     public partial class BluetoothDevicesPage : ContentPage
     {
-        public BluetoothDevicesPage()
+        private readonly IBluetoothService _bluetoothService;
+        private readonly IPermissionService _permissionService;
+        private BluetoothDevicesViewModel _viewModel;
+        
+        public BluetoothDevicesPage(IBluetoothService bluetoothService, IPermissionService permissionService)
         {
             InitializeComponent();
-            var vm = new ViewModels.BluetoothDevicesViewModel();
-            this.BindingContext = vm;
-            DevicesCollection.ItemsSource = vm.Devices;
+            
+            _bluetoothService = bluetoothService;
+            _permissionService = permissionService;
+            _viewModel = new BluetoothDevicesViewModel(_bluetoothService, _permissionService);
+            this.BindingContext = _viewModel;
+            
+            // Configurar eventos
             AddDeviceBtn.Clicked += (s, e) => ShowScanModal();
             
             // Inscrever-se para mudanças de tema
