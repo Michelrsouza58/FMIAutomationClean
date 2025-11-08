@@ -12,7 +12,9 @@ namespace FMIAutomation.Models
         Headset,
         Camera,
         Printer,
-        Wearable
+        Wearable,
+        BLE,
+        Classic
     }
     
     public class BluetoothDevice : INotifyPropertyChanged

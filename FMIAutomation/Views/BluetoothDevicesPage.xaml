@@ -16,18 +16,46 @@
     
     <Grid RowDefinitions="Auto, Auto, *" x:Name="MainLayout">
         
-        <!-- Header com botão de scan -->
-        <Grid Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
+        <!-- Header com botões de scan -->
+        <Grid Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto,Auto,Auto">
             <Label Text="Dispositivos Bluetooth" TextColor="#2563EB" FontSize="24" FontAttributes="Bold" />
+            
+            <!-- Botão scan híbrido (normal) -->
             <Button x:Name="ScanDevicesBtn" 
                     Text="📡" 
-                    FontSize="24" 
-                    WidthRequest="50" 
-                    HeightRequest="50" 
-                    CornerRadius="25" 
+                    FontSize="18" 
+                    WidthRequest="45" 
+                    HeightRequest="45" 
+                    CornerRadius="22" 
                     BackgroundColor="#2563EB" 
                     TextColor="White" 
                     Grid.Column="1"
+                    Margin="0,0,5,0"
+                    Shadow="{OnPlatform WinUI={x:Null}, Default={Shadow Brush=Black, Opacity=0.3, Radius=8, Offset='0,4'}}" />
+                    
+            <!-- Botão teste BLE -->
+            <Button x:Name="TestBLEBtn" 
+                    Text="🔷" 
+                    FontSize="16" 
+                    WidthRequest="40" 
+                    HeightRequest="40" 
+                    CornerRadius="20" 
+                    BackgroundColor="#10B981" 
+                    TextColor="White" 
+                    Grid.Column="2"
+                    Margin="0,0,5,0"
+                    Shadow="{OnPlatform WinUI={x:Null}, Default={Shadow Brush=Black, Opacity=0.3, Radius=8, Offset='0,4'}}" />
+                    
+            <!-- Botão teste Clássico -->
+            <Button x:Name="TestClassicBtn" 
+                    Text="🔶" 
+                    FontSize="16" 
+                    WidthRequest="40" 
+                    HeightRequest="40" 
+                    CornerRadius="20" 
+                    BackgroundColor="#F59E0B" 
+                    TextColor="White" 
+                    Grid.Column="3"
                     Shadow="{OnPlatform WinUI={x:Null}, Default={Shadow Brush=Black, Opacity=0.3, Radius=8, Offset='0,4'}}" />
         </Grid>
         

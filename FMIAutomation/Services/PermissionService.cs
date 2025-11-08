@@ -24,24 +24,24 @@ namespace FMIAutomation.Services
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Verificando permissões de Bluetooth...");
+                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] 🔍 Verificando permissões de Bluetooth...");
                 
+#if ANDROID
+                // Usar helper específico do Android
+                var hasPermissions = FMIAutomation.Platforms.Android.BluetoothPermissionHelper.CheckBluetoothPermissions();
+                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Resultado Android específico: {hasPermissions}");
+                return hasPermissions;
+#else
                 // Verificar permissão de localização (necessária para Bluetooth)
                 var locationStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
                 System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Status localização: {locationStatus}");
                 
-                if (locationStatus != PermissionStatus.Granted)
-                {
-                    System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Permissão de localização não concedida");
-                    return false;
-                }
-                
-                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Todas as permissões verificadas com sucesso");
-                return true;
+                return locationStatus == PermissionStatus.Granted;
+#endif
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Erro ao verificar permissões Bluetooth: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] ❌ Erro ao verificar permissões Bluetooth: {ex.Message}");
                 return false;
             }
         }
@@ -50,24 +50,31 @@ namespace FMIAutomation.Services
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Solicitando permissões de Bluetooth...");
+                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] 📋 Solicitando permissões de Bluetooth...");
                 
+#if ANDROID
+                // Usar helper específico do Android para solicitar todas as permissões
+                FMIAutomation.Platforms.Android.BluetoothPermissionHelper.RequestBluetoothPermissions();
+                
+                // Aguardar um tempo para o usuário responder
+                await Task.Delay(2000);
+                
+                // Verificar se foram concedidas
+                var hasPermissions = FMIAutomation.Platforms.Android.BluetoothPermissionHelper.CheckBluetoothPermissions();
+                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Permissões após solicitação: {hasPermissions}");
+                
+                return hasPermissions;
+#else
                 // Solicitar permissão de localização (necessária para Bluetooth no Android)
                 var locationStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
                 System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Resultado permissão localização: {locationStatus}");
                 
-                if (locationStatus != PermissionStatus.Granted)
-                {
-                    System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Usuário negou permissão de localização");
-                    return false;
-                }
-                
-                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Todas as permissões Bluetooth concedidas!");
-                return true;
+                return locationStatus == PermissionStatus.Granted;
+#endif
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Erro ao solicitar permissões Bluetooth: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] ❌ Erro ao solicitar permissões Bluetooth: {ex.Message}");
                 return false;
             }
         }
