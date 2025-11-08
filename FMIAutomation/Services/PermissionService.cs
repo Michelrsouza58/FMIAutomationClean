@@ -26,10 +26,17 @@ namespace FMIAutomation.Services
             {
                 System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Verificando permissões de Bluetooth...");
                 
-                // Por enquanto, simula que as permissões estão sempre concedidas
-                await Task.Delay(100); // Simula delay
+                // Verificar permissão de localização (necessária para Bluetooth)
+                var locationStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Status localização: {locationStatus}");
                 
-                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Permissões simuladas como concedidas");
+                if (locationStatus != PermissionStatus.Granted)
+                {
+                    System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Permissão de localização não concedida");
+                    return false;
+                }
+                
+                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Todas as permissões verificadas com sucesso");
                 return true;
             }
             catch (Exception ex)
@@ -45,10 +52,17 @@ namespace FMIAutomation.Services
             {
                 System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Solicitando permissões de Bluetooth...");
                 
-                // Por enquanto, simula que as permissões foram concedidas
-                await Task.Delay(500); // Simula delay da solicitação
+                // Solicitar permissão de localização (necessária para Bluetooth no Android)
+                var locationStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                System.Diagnostics.Debug.WriteLine($"[PERMISSIONS] Resultado permissão localização: {locationStatus}");
                 
-                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Permissões simuladas como concedidas");
+                if (locationStatus != PermissionStatus.Granted)
+                {
+                    System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Usuário negou permissão de localização");
+                    return false;
+                }
+                
+                System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Todas as permissões Bluetooth concedidas!");
                 return true;
             }
             catch (Exception ex)
@@ -62,8 +76,8 @@ namespace FMIAutomation.Services
         {
             try
             {
-                // Por enquanto, apenas registra no log
                 System.Diagnostics.Debug.WriteLine("[PERMISSIONS] Abrindo configurações do app...");
+                AppInfo.ShowSettingsUI();
                 await Task.CompletedTask;
             }
             catch (Exception ex)

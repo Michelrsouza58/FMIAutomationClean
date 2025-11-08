@@ -44,6 +44,25 @@ namespace FMIAutomation.Views
         {
             try
             {
+                // Primeiro, solicitar permissões Bluetooth
+                System.Diagnostics.Debug.WriteLine("[BluetoothScan] Verificando permissões...");
+                var permissionService = new PermissionService();
+                
+                var hasPermissions = await permissionService.CheckBluetoothPermissionsAsync();
+                if (!hasPermissions)
+                {
+                    System.Diagnostics.Debug.WriteLine("[BluetoothScan] Solicitando permissões ao usuário...");
+                    var granted = await permissionService.RequestBluetoothPermissionsAsync();
+                    
+                    if (!granted)
+                    {
+                        await DisplayAlert("Permissões Necessárias", 
+                            "Para usar o Bluetooth, é necessário conceder permissão de localização. " +
+                            "Você pode fazer isso nas configurações do app.", "OK");
+                        return;
+                    }
+                }
+
                 // Mostrar indicador de scan
                 ScanStatusFrame.IsVisible = true;
                 ScanIndicator.IsRunning = true;

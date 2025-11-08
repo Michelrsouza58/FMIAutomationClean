@@ -16,13 +16,27 @@ namespace FMIAutomation
             try
             {
                 _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+                
+                System.Diagnostics.Debug.WriteLine("[MainPage] Iniciando InitializeComponent...");
                 InitializeComponent();
+                
+                System.Diagnostics.Debug.WriteLine("[MainPage] InitializeComponent concluído. Configurando eventos...");
                 SetupToggle();
-                EntrarBtn.Clicked += EntrarBtn_Clicked;
+                
+                if (EntrarBtn != null)
+                {
+                    EntrarBtn.Clicked += EntrarBtn_Clicked;
+                    System.Diagnostics.Debug.WriteLine("[MainPage] Eventos configurados com sucesso.");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[MainPage] ERRO: EntrarBtn é null após InitializeComponent!");
+                }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[MainPage] Erro na inicialização: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[MainPage] StackTrace: {ex.StackTrace}");
                 throw; // Re-throw para que o erro seja visível
             }
         }		private async void EntrarBtn_Clicked(object? sender, EventArgs e)
